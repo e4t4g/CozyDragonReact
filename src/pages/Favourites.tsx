@@ -7,11 +7,11 @@ import {Link} from "react-router-dom";
 
 export const Favourites = () => {
     return (
-        <Flex flexDirection='column' flex={1} mx='auto' w='70%' maxW='960px' minHeight='calc(100vh - 80px - 61px)'
-              pt={6}>
+        <Flex flexDirection='column' flex={1} mx='auto' w='70%' maxW='960px' p={5}>
             <Link to='/'>
-                <ChakraLink color='gray' display='flex' alignItems='center' ml='-20px'><Icon as={MdArrowBackIosNew}
-                                                                                             mr={1}/>Вернуться в каталог</ChakraLink>
+                <ChakraLink color='gray' display='flex' alignItems='center' ml='-20px'>
+                    <Icon as={MdArrowBackIosNew} mr={1}/>Вернуться в каталог
+                </ChakraLink>
             </Link>
             <Heading my={5}>Избранное</Heading>
 

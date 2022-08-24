@@ -8,14 +8,14 @@ const ProductSkeleton = () => {
             rounded='16px'
             padding='4'
             maxW='300px'
-            minWidth='222px'
+            minWidth='220px'
             height='475px'
             flexDirection='column'
         >
             <Skeleton height='250px'/>
             <SkeletonText mt='4' noOfLines={4} spacing='4'/>
             <Spacer/>
-            <Skeleton height='40px' mt={8} borderRadius='1rem'/>
+            <Skeleton height='40px' mt={8} borderRadius='16px'/>
         </Flex>
     );
 };

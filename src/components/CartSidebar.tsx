@@ -18,42 +18,33 @@ import {BsBag} from "react-icons/bs";
 const CartSidebar = () => {
     const {cartItems} = useCart();
 
-    return (
-        <Flex
-            textAlign={"left"}
-            position={"sticky"}
-            top='80px'
-            padding='20px'
-            height='calc(100vh - 80px)'
-            overflow='hidden'
-            flexDirection='column'
-            bg='gray.100'
-            borderLeft="1px"
-            borderLeftColor='gray.200'
-        >
-            <Heading py={4}>Корзина</Heading>
-
+    const CartList = () => (
+        <>
             {cartItems.length > 0
-                ? <List flexGrow={1} spacing={3} overflowY='auto'>
+                ? <List flexGrow={1} spacing={3} overflowY='auto' py={5} mr={1}>
                     {cartItems.map(({product, quantity}) => (
-                        <ListItem key={product.id} mr={1}>
+                        <ListItem key={product.id}>
                             <HStack spacing={3}>
-                                <Flex maxH='100px'
-                                      maxW='100px'
-                                      justifyContent='center'
-                                >
-                                    <Image
-                                        maxH='100%'
-                                        maxW='100%'
-                                        objectFit={'contain'}
-                                        src={product.image}
-                                    />
-                                </Flex>
-                                <Flex flexGrow={1} flexDirection='column'>
-                                    <Text fontSize='sm' noOfLines={3}>{product.title}</Text>
-                                    <Text fontSize='sm' color='gray.500'>{formatCurrency(Number(product.price))}</Text>
-                                </Flex>
-
+                                <Link to={`/${product.id}/${product.title}`}
+                                      style={{display: "flex", alignItems: 'center', flex: 1}}>
+                                    <Flex maxH='100px'
+                                          maxW='100px'
+                                          justifyContent='center'
+                                          p={1}
+                                    >
+                                        <Image
+                                            maxH='100%'
+                                            maxW='100%'
+                                            objectFit={'contain'}
+                                            src={product.image}
+                                        />
+                                    </Flex>
+                                    <Flex gap={2} flexDirection='column'>
+                                        <Text fontSize='sm' noOfLines={3}>{product.title}</Text>
+                                        <Text fontSize='sm'
+                                              color='gray.500'>{formatCurrency(Number(product.price))}</Text>
+                                    </Flex>
+                                </Link>
                                 <Counter product={product} quantity={quantity}/>
                             </HStack>
                         </ListItem>
@@ -66,7 +57,11 @@ const CartSidebar = () => {
                     <Text>Тут появятся товары, которые вы закажете.</Text>
                 </Flex>
             }
+        </>
+    );
 
+    const CartLink = () => (
+        <>
             {cartItems.length > 0 &&
                 <Link to={'cart'}>
                     <Button
@@ -74,7 +69,8 @@ const CartSidebar = () => {
                         colorScheme='yellow'
                         justifyContent='space-between'
                         py={6}
-                        borderRadius='1rem'
+                        mt={4}
+                        borderRadius='16px'
                         w='100%'
                     >
                         Перейти в корзину&nbsp;
@@ -88,6 +84,25 @@ const CartSidebar = () => {
                     </Button>
                 </Link>
             }
+        </>
+    )
+
+    return (
+        <Flex
+            textAlign={"left"}
+            position={"sticky"}
+            top='80px'
+            padding={4}
+            height='calc(100vh - 80px)'
+            overflow='hidden'
+            flexDirection='column'
+            bg='gray.100'
+            borderLeft="1px"
+            borderLeftColor='gray.200'
+        >
+            <Heading>Корзина</Heading>
+            <CartList/>
+            <CartLink/>
         </Flex>
 
     );

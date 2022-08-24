@@ -1,5 +1,5 @@
 import React, {ReactNode, useContext, useState} from "react";
-import {IProduct} from "../components/ProductItem";
+import { IProduct } from "../models/IProduct";
 
 type CartProviderProps = {
     children: ReactNode

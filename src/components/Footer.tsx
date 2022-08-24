@@ -26,7 +26,7 @@ export default function Footer() {
                         flexGrow: 1,
                         ml: 8,
                     }}>
-                    <Text fontSize={'sm'} textAlign={'center'}>
+                    <Text fontSize={'sm'} textAlign={'center'} color='gray'>
                         © 2022 GB Store. All rights reserved
                     </Text>
                 </Flex>
