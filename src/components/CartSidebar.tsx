@@ -14,9 +14,11 @@ import {formatCurrency} from "../utilities/formatCurrency";
 import {Link} from "react-router-dom";
 import Counter from "./UI/Counter";
 import {BsBag} from "react-icons/bs";
+import {useCategory} from "../context/CategoryContext";
 
 const CartSidebar = () => {
     const {cartItems} = useCart();
+    const {currentCategory} = useCategory();
 
     const CartList = () => (
         <>
@@ -25,7 +27,7 @@ const CartSidebar = () => {
                     {cartItems.map(({product, quantity}) => (
                         <ListItem key={product.id}>
                             <HStack spacing={3}>
-                                <Link to={`/${product.id}/${product.title}`}
+                                <Link to={`/${currentCategory}/${product.id}/${product.title}`}
                                       style={{display: "flex", alignItems: 'center', flex: 1}}>
                                     <Flex maxH='100px'
                                           maxW='100px'
@@ -63,7 +65,7 @@ const CartSidebar = () => {
     const CartLink = () => (
         <>
             {cartItems.length > 0 &&
-                <Link to={'cart'}>
+                <Link to={'/cart'}>
                     <Button
                         fontWeight='normal'
                         colorScheme='yellow'

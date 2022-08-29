@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {BackHomeLink} from "../components/UI/BackHomeLink";
 import {
     Box,
     Divider,

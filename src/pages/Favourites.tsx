@@ -7,9 +7,11 @@ import {Link} from "react-router-dom";
 import MainBlockLayout from '../components/MainBlockLayout';
 import {ProductItem} from "../components/ProductItem";
 import {IProduct} from "../models/IProduct";
+import {useCategory} from "../context/CategoryContext";
 
 export const Favourites = () => {
     const [list, setList] = useState([] as IProduct[]);
+    const {currentCategory} = useCategory();
 
     const EmptyList = () => (
         <Flex alignItems='center' justifyContent='center' gap={4} flexDirection='column' mt={10}>
@@ -17,7 +19,7 @@ export const Favourites = () => {
             <Heading fontSize='xx-large' my={2}>В избранном ничего нет</Heading>
             <Text color='gray' textAlign='center'>Здесь пока ничего нет, но вы можете
                 <br/>добавить товар в избранное, кликнув на <Icon as={MdFavorite}/></Text>
-            <Link to='/'>
+            <Link to={`/${currentCategory}`}>
                 <Button colorScheme='yellow' px={10} mt={6}>
                     В каталог
                 </Button>

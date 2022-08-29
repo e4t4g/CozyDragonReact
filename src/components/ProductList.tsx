@@ -9,23 +9,21 @@ import axios from "axios";
 import ProductSkeleton from "./UI/ProductSkeleton";
 import {IProduct} from '../models/IProduct';
 import ErrorMessage from "./UI/ErrorMessage";
+import {useCategory} from "../context/CategoryContext";
 
-interface ProductListProps {
-    currentCategory: string
-}
-
-const ProductList: FC<ProductListProps> = ({currentCategory}) => {
+const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const {currentCategory} = useCategory();
 
-    const fetchProducts = async (category: string = 'All') => {
+    const fetchProducts = async () => {
         setIsLoading(true);
         setError('');
         await axios.get(
-            category === 'All'
+            currentCategory === 'all'
                 ? 'https://fakestoreapi.com/products'
-                : `https://fakestoreapi.com/products/category/${category}`
+                : `https://fakestoreapi.com/products/category/${currentCategory}`
         )
             .then(response => {
                 setProducts(response.data);
@@ -40,7 +38,7 @@ const ProductList: FC<ProductListProps> = ({currentCategory}) => {
     };
 
     useEffect(() => {
-        fetchProducts(currentCategory);
+        fetchProducts();
     }, [currentCategory]);
 
     const SkeletonList = () => (
@@ -59,7 +57,7 @@ const ProductList: FC<ProductListProps> = ({currentCategory}) => {
             bg='gray.50'
             overflowY='auto'
         >
-            <Heading mb={5}>{currentCategory.toUpperCase()}</Heading>
+            <Heading mb={5}>{currentCategory?.toUpperCase()}</Heading>
 
             {error && <ErrorMessage message={error}/>}
 

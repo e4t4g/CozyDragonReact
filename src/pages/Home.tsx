@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     Grid,
     GridItem
@@ -8,8 +8,6 @@ import ProductList from '../components/ProductList';
 import CartSidebar from "../components/CartSidebar";
 
 export const Home = () => {
-    const [currentCategory, setCurrentCategory] = useState('All');
-
     return (
         <Grid
             templateAreas={`"nav main aside"`}
@@ -19,13 +17,10 @@ export const Home = () => {
             color='blackAlpha.800'
         >
             <GridItem area={'nav'}>
-                <Sidebar
-                    currentCategory={currentCategory}
-                    selectCategory={(c) => setCurrentCategory(c)}
-                />
+                <Sidebar/>
             </GridItem>
             <GridItem area={'main'} overflow={"hidden"}>
-                <ProductList currentCategory={currentCategory}/>
+                <ProductList/>
             </GridItem>
             <GridItem area={'aside'}>
                 <CartSidebar/>

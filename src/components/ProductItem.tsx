@@ -12,6 +12,7 @@ import {IProduct} from '../models/IProduct';
 import {formatCurrency} from "../utilities/formatCurrency";
 import Counter from "./UI/Counter";
 import {FavouriteSwitcher} from "./UI/FavouriteSwitcher";
+import {useCategory} from "../context/CategoryContext";
 
 interface ProductItemProps {
     product: IProduct
@@ -20,6 +21,7 @@ interface ProductItemProps {
 export const ProductItem: FC<ProductItemProps> = ({product}) => {
     const {id, image, price, title} = product;
     const {getItemQuantity} = useCart();
+    const {currentCategory} = useCategory();
     const quantity = getItemQuantity(id);
 
     const isFav = false;
@@ -38,7 +40,7 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
             position='relative'
         >
             <FavouriteSwitcher isFav={isFav}/>
-            <Link to={`/${product.id}/${product.title}`}>
+            <Link to={`/${currentCategory}/${product.id}/${product.title}`}>
                 <Box p={4}>
                     <Flex height='250px' width='100%' justifyContent='center'>
                         <Image

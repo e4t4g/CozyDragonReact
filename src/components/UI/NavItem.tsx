@@ -1,5 +1,6 @@
-import {Flex, FlexProps, Link} from "@chakra-ui/react";
+import {Flex, FlexProps} from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface NavItemProps extends FlexProps {
     children: string;
@@ -7,7 +8,7 @@ interface NavItemProps extends FlexProps {
 
 export const NavItem = ({children, ...rest}: NavItemProps) => {
     return (
-        <Link href="#" style={{textDecoration: 'none'}} _focus={{boxShadow: 'none'}}>
+        <Link to={`/${children}`} style={{textDecoration: 'none'}}>
             <Flex
                 align="center"
                 p="4"

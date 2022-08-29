@@ -1,23 +1,20 @@
-import {Box, BoxProps} from "@chakra-ui/react";
+import {Box} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {NavItem} from "./UI/NavItem";
+import {useCategory} from "../context/CategoryContext";
 
-interface SidebarProps extends BoxProps {
-    currentCategory: string,
-    selectCategory: (category: string) => void
-}
-
-export const Sidebar = ({currentCategory, selectCategory, ...rest}: SidebarProps) => {
+export const Sidebar = () => {
     const [categories, setCategories] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const {currentCategory, onChangeCurrentCategory} = useCategory();
 
     const fetchCategories = async () => {
         setIsLoading(true)
         await axios.get('https://fakestoreapi.com/products/categories')
             .then(response => {
                 let result = response.data;
-                result.unshift('All');
+                result.unshift('all');
                 setCategories(result);
             }).catch(error => {
                 console.log(error);
@@ -39,13 +36,12 @@ export const Sidebar = ({currentCategory, selectCategory, ...rest}: SidebarProps
             top='80px'
             py={4}
             height='calc(100vh - 80px)'
-            borderRightColor='gray.200'
-            {...rest}>
+            borderRightColor='gray.200'>
             {!isLoading && categories.map((category) => (
                 <NavItem
                     key={category}
                     fontWeight={currentCategory === category ? '800' : '400'}
-                    onClick={() => selectCategory(category)}
+                    onClick={() => onChangeCurrentCategory(category)}
                 >
                     {category}
                 </NavItem>

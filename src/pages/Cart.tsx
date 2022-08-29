@@ -34,9 +34,11 @@ import {MdOutlineEmail} from 'react-icons/md';
 import {BiHomeAlt} from 'react-icons/bi';
 import Counter from "../components/UI/Counter";
 import MainBlockLayout from "../components/MainBlockLayout";
+import { useCategory } from '../context/CategoryContext';
 
 export const Cart = () => {
     const {cartItems} = useCart();
+    const {currentCategory} = useCategory();
 
     const deliveryCost = 100;
 
@@ -133,7 +135,7 @@ export const Cart = () => {
             <Icon fontSize='140px' color='gray.400' as={BsBag}/>
             <Heading fontSize='xx-large' my={2}>В вашей корзине пока пусто</Heading>
             <Text color='gray'>Тут появятся товары, которые вы закажете.</Text>
-            <Link to='/'>
+            <Link to={`/${currentCategory}`}>
                 <Button colorScheme='yellow' px={10} mt={10}>
                     В каталог
                 </Button>
@@ -147,7 +149,7 @@ export const Cart = () => {
                 {cartItems.map(({product, quantity}) => (
                     <ListItem key={product.id} p={3}>
                         <HStack spacing={3}>
-                            <Link to={`/${product.id}/${product.title}`} style={{display: "flex", alignItems: 'center'}}>
+                            <Link to={`/${currentCategory}/${product.id}/${product.title}`} style={{display: "flex", alignItems: 'center'}}>
                                 <Flex maxH='100px'
                                       maxW='100px'
                                       justifyContent='center'

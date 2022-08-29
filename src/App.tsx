@@ -6,14 +6,17 @@ import {
 import {CartProvider} from "./context/CartContext";
 import {Layout} from "./components/Layout";
 import AppRouter from "./router/AppRouter";
+import {CategoryProvider} from "./context/CategoryContext";
 
 export const App = () => {
     return (
         <ChakraProvider theme={theme}>
             <CartProvider>
-                <Layout>
-                    <AppRouter/>
-                </Layout>
+                <CategoryProvider>
+                    <Layout>
+                        <AppRouter/>
+                    </Layout>
+                </CategoryProvider>
             </CartProvider>
         </ChakraProvider>
     )

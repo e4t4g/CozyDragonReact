@@ -19,6 +19,7 @@ import {HamburgerIcon, CloseIcon} from '@chakra-ui/icons';
 import {MdFavorite} from 'react-icons/md';
 import {Link} from 'react-router-dom'
 import {BsBagFill} from 'react-icons/bs';
+import {useCategory} from "../context/CategoryContext";
 
 const Links = [
     {title: 'Favorite', icon: <MdFavorite/>, path: 'favourites'},
@@ -40,6 +41,7 @@ const NavLink = ({children}: { children: ReactNode }) => (
 
 export const Header = () => {
     const {isOpen, onOpen, onClose} = useDisclosure();
+    const {onChangeCurrentCategory} = useCategory();
 
     return (
         <Flex bg='gray.100'
@@ -61,7 +63,7 @@ export const Header = () => {
                 display={{md: 'none'}}
                 onClick={isOpen ? onClose : onOpen}
             />
-            <Link to='/'>
+            <Link to='/all' onClick={() => onChangeCurrentCategory('all')}>
                 <Flex alignItems='center' color='gray.600' textTransform={"uppercase"} ml={4}>
                     <svg width="52" height="52"
                          xmlns="http://www.w3.org/2000/svg">
