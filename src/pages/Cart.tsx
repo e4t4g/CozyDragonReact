@@ -33,7 +33,7 @@ import {BsBag, BsPerson} from 'react-icons/bs';
 import {MdOutlineEmail} from 'react-icons/md';
 import {BiHomeAlt} from 'react-icons/bi';
 import Counter from "../components/UI/Counter";
-import {BackHomeLink} from "../components/UI/BackHomeLink";
+import MainBlockLayout from "../components/MainBlockLayout";
 
 export const Cart = () => {
     const {cartItems} = useCart();
@@ -175,27 +175,21 @@ export const Cart = () => {
     )
 
     return (
-        <Flex flexDirection='column' flex={1} mx='auto' w='70%' maxW='960px' p={5}>
-            <BackHomeLink/>
-            <Heading my={5}>Корзина</Heading>
+        <MainBlockLayout title={'Корзина'}>
             {cartItems.length > 0 ? (
                 <Flex gap={10} borderTop='1px solid' borderColor='gray.200' pt={2}>
-
                     <OrderList/>
                     <Box flex={1} overflow={"auto"}>
                         <Heading fontSize='x-large' mb={2}>Итого</Heading>
                         <Text color='gray'>Доставка 15–30 мин. Оплата при получении картой или наличными.</Text>
-
                         <TotalCostTable/>
-
                         <Heading fontSize='x-large' mb={4}>Адрес доставки</Heading>
                         <OrderForm/>
-
                     </Box>
                 </Flex>
             ) : (
                 <EmptyCart/>
             )}
-        </Flex>
+        </MainBlockLayout>
     );
 };

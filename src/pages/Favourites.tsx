@@ -1,31 +1,41 @@
-import {Button, Flex, Heading, Icon} from '@chakra-ui/react';
-import React from 'react';
-import {Link as ChakraLink, Text} from "@chakra-ui/react";
-import {MdArrowBackIosNew, MdFavorite} from "react-icons/md";
+import {Button, Flex, Heading, Icon, SimpleGrid} from '@chakra-ui/react';
+import React, { useState } from 'react';
+import {Text} from "@chakra-ui/react";
+import {MdFavorite} from "react-icons/md";
 import {IoIosHeartEmpty} from "react-icons/io";
 import {Link} from "react-router-dom";
+import MainBlockLayout from '../components/MainBlockLayout';
+import {ProductItem} from "../components/ProductItem";
+import {IProduct} from "../models/IProduct";
 
 export const Favourites = () => {
-    return (
-        <Flex flexDirection='column' flex={1} mx='auto' w='70%' maxW='960px' p={5}>
-            <Link to='/'>
-                <ChakraLink color='gray' display='flex' alignItems='center' ml='-20px'>
-                    <Icon as={MdArrowBackIosNew} mr={1}/>Вернуться в каталог
-                </ChakraLink>
-            </Link>
-            <Heading my={5}>Избранное</Heading>
+    const [list, setList] = useState([] as IProduct[]);
 
-            <Flex alignItems='center' justifyContent='center' gap={4} flexDirection='column' mt={10}>
-                <Icon fontSize='140px' color='gray.400' as={IoIosHeartEmpty}/>
-                <Heading fontSize='xx-large' my={2}>В избранном ничего нет</Heading>
-                <Text color='gray' textAlign='center'>Здесь пока ничего нет, но вы можете
-                    <br/>добавить товар в избранное, кликнув на <Icon as={MdFavorite}/></Text>
-                <Link to='/'>
-                    <Button colorScheme='yellow' px={10} mt={6}>
-                        В каталог
-                    </Button>
-                </Link>
-            </Flex>
+    const EmptyList = () => (
+        <Flex alignItems='center' justifyContent='center' gap={4} flexDirection='column' mt={10}>
+            <Icon fontSize='140px' color='gray.400' as={IoIosHeartEmpty}/>
+            <Heading fontSize='xx-large' my={2}>В избранном ничего нет</Heading>
+            <Text color='gray' textAlign='center'>Здесь пока ничего нет, но вы можете
+                <br/>добавить товар в избранное, кликнув на <Icon as={MdFavorite}/></Text>
+            <Link to='/'>
+                <Button colorScheme='yellow' px={10} mt={6}>
+                    В каталог
+                </Button>
+            </Link>
         </Flex>
+    )
+
+    return (
+        <MainBlockLayout title={'Избранное'}>
+            {list.length > 0 ? (
+                <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
+                    {list.map(product => (
+                        <ProductItem product={product} key={product.id}/>
+                    ))}
+                </SimpleGrid>
+            ) : (
+                <EmptyList/>
+            )}
+        </MainBlockLayout>
     );
 };

@@ -16,6 +16,8 @@ import {IProduct} from "../models/IProduct";
 import {formatCurrency} from "../utilities/formatCurrency";
 import Counter from "../components/UI/Counter";
 import {useCart} from "../context/CartContext";
+import {FavouriteSwitcher} from "../components/UI/FavouriteSwitcher";
+import MainBlockLayout from "../components/MainBlockLayout";
 
 
 export const Product = () => {
@@ -45,21 +47,16 @@ export const Product = () => {
 
 
     return (
-        <Flex flexDirection='column' flex={1} mx='auto' w='70%' maxW='960px' p={5}>
-            <BackHomeLink/>
+        <MainBlockLayout>
             {isLoading && <Flex gap={10} pt={15}>
-
-
-                <Skeleton height='500px' rounded='16px' maxW='500px' flex={2} startColor='gray.300'
+                <Skeleton height='500px' rounded='2xl' maxW='500px' flex={2} startColor='gray.300'
                           endColor='gray.300'/>
 
                 <Flex flexDirection='column' justifyContent='center' flex={1} height='500px' gap={5}>
                     <SkeletonText noOfLines={3} spacing='4' pb={5}/>
                     <SkeletonText noOfLines={4} spacing='4'/>
-                    <Skeleton height='48px' w='144px' mt={8} borderRadius='16px'/>
+                    <Skeleton height='48px' w='144px' mt={8} borderRadius='2xl'/>
                 </Flex>
-
-
             </Flex>}
 
             {!isLoading && product &&
@@ -69,7 +66,9 @@ export const Product = () => {
                           maxW='500px'
                           justifyContent='center'
                           flex={2}
+                          position='relative'
                     >
+                        <FavouriteSwitcher isFav={true}/>
                         <Image
                             maxH='100%'
                             maxW='100%'
@@ -97,8 +96,6 @@ export const Product = () => {
                     </VStack>
                 </Flex>
             }
-
-
-        </Flex>
+        </MainBlockLayout>
     );
 };

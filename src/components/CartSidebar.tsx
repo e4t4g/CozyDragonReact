@@ -70,7 +70,7 @@ const CartSidebar = () => {
                         justifyContent='space-between'
                         py={6}
                         mt={4}
-                        borderRadius='16px'
+                        borderRadius='2xl'
                         w='100%'
                     >
                         Перейти в корзину&nbsp;

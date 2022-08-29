@@ -7,7 +7,8 @@ import React, {FC, useEffect, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";
 import ProductSkeleton from "./UI/ProductSkeleton";
-import { IProduct } from '../models/IProduct';
+import {IProduct} from '../models/IProduct';
+import ErrorMessage from "./UI/ErrorMessage";
 
 interface ProductListProps {
     currentCategory: string
@@ -42,6 +43,12 @@ const ProductList: FC<ProductListProps> = ({currentCategory}) => {
         fetchProducts(currentCategory);
     }, [currentCategory]);
 
+    const SkeletonList = () => (
+        <>
+            {Array(4).fill(null).map((_, index) => <ProductSkeleton key={index}/>)}
+        </>
+    )
+
     return (
         <Box
             textAlign='left'
@@ -53,13 +60,15 @@ const ProductList: FC<ProductListProps> = ({currentCategory}) => {
             overflowY='auto'
         >
             <Heading mb={5}>{currentCategory.toUpperCase()}</Heading>
-            <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
 
-                {isLoading && Array(3).fill(<ProductSkeleton/>).map(i => i)}
+            {error && <ErrorMessage message={error}/>}
+
+            {!error && <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
+                {isLoading && <SkeletonList/>}
                 {!isLoading && products.map(product => (
                     <ProductItem product={product} key={product.id}/>
                 ))}
-            </SimpleGrid>
+            </SimpleGrid>}
         </Box>
     );
 };

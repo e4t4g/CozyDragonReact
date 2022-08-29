@@ -11,6 +11,7 @@ import {useCart} from "../context/CartContext";
 import {IProduct} from '../models/IProduct';
 import {formatCurrency} from "../utilities/formatCurrency";
 import Counter from "./UI/Counter";
+import {FavouriteSwitcher} from "./UI/FavouriteSwitcher";
 
 interface ProductItemProps {
     product: IProduct
@@ -19,8 +20,9 @@ interface ProductItemProps {
 export const ProductItem: FC<ProductItemProps> = ({product}) => {
     const {id, image, price, title} = product;
     const {getItemQuantity} = useCart();
-
     const quantity = getItemQuantity(id);
+
+    const isFav = false;
 
     return (
         <Flex
@@ -28,12 +30,14 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
             overflow='hidden'
             bg='gray.100'
             zIndex={1}
-            rounded='16px'
+            rounded='2xl'
             flexDirection='column'
             transition={'all .3s ease'}
             _hover={{backgroundColor: 'gray.200'}}
             justifyContent='space-between'
+            position='relative'
         >
+            <FavouriteSwitcher isFav={isFav}/>
             <Link to={`/${product.id}/${product.title}`}>
                 <Box p={4}>
                     <Flex height='250px' width='100%' justifyContent='center'>

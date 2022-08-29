@@ -9,7 +9,7 @@ interface CounterProps {
     quantity: number
 }
 
-const Counter = ({product, quantity, ...rest}: CounterProps) => {
+const Counter = ({product, quantity}: CounterProps) => {
     const {increaseCartQuantity, decreaseCartQuantity} = useCart();
     return (
         <>
@@ -32,7 +32,7 @@ const Counter = ({product, quantity, ...rest}: CounterProps) => {
                     <IconButton aria-label='Add item'
                                 icon={<FaMinus/>}
                                 backgroundColor='white'
-                                borderRadius='16px'
+                                borderRadius='2xl'
                                 _focus={{boxShadow: 'none'}}
                                 onClick={() => decreaseCartQuantity(product)}
                     />
@@ -42,7 +42,7 @@ const Counter = ({product, quantity, ...rest}: CounterProps) => {
                     <IconButton aria-label='Add item'
                                 icon={<FaPlus/>}
                                 variant='ghost'
-                                borderRadius='16px'
+                                borderRadius='2xl'
                                 _focus={{boxShadow: 'none'}}
                                 onClick={() => increaseCartQuantity(product)}
                     />

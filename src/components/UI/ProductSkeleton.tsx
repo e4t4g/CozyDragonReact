@@ -5,7 +5,7 @@ const ProductSkeleton = () => {
     return (
         <Flex
             bg='gray.100'
-            rounded='16px'
+            rounded='2xl'
             padding='4'
             maxW='300px'
             minWidth='220px'
@@ -15,7 +15,7 @@ const ProductSkeleton = () => {
             <Skeleton height='250px'/>
             <SkeletonText mt='4' noOfLines={4} spacing='4'/>
             <Spacer/>
-            <Skeleton height='40px' mt={8} borderRadius='16px'/>
+            <Skeleton height='40px' mt={8} borderRadius='2xl'/>
         </Flex>
     );
 };
