@@ -33,8 +33,8 @@ import {BsBag, BsPerson} from 'react-icons/bs';
 import {MdOutlineEmail} from 'react-icons/md';
 import {BiHomeAlt} from 'react-icons/bi';
 import Counter from "../components/UI/Counter";
-import MainBlockLayout from "../components/MainBlockLayout";
 import { useCategory } from '../context/CategoryContext';
+import MainBlockLayout from '../components/UI/MainBlockLayout';
 
 export const Cart = () => {
     const {cartItems} = useCart();

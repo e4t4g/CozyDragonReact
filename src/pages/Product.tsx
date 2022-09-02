@@ -16,8 +16,7 @@ import {formatCurrency} from "../utilities/formatCurrency";
 import Counter from "../components/UI/Counter";
 import {useCart} from "../context/CartContext";
 import {FavouriteSwitcher} from "../components/UI/FavouriteSwitcher";
-import MainBlockLayout from "../components/MainBlockLayout";
-
+import MainBlockLayout from "../components/UI/MainBlockLayout";
 
 export const Product = () => {
     const {productId} = useParams();
@@ -44,13 +43,11 @@ export const Product = () => {
         getProduct();
     }, []);
 
-
     return (
         <MainBlockLayout>
             {isLoading && <Flex gap={10} pt={15}>
                 <Skeleton height='500px' rounded='2xl' maxW='500px' flex={2} startColor='gray.300'
                           endColor='gray.300'/>
-
                 <Flex flexDirection='column' justifyContent='center' flex={1} height='500px' gap={5}>
                     <SkeletonText noOfLines={3} spacing='4' pb={5}/>
                     <SkeletonText noOfLines={4} spacing='4'/>
@@ -60,7 +57,6 @@ export const Product = () => {
 
             {!isLoading && product &&
                 <Flex gap={5} pt={10}>
-
                     <Flex maxH='500px'
                           maxW='500px'
                           justifyContent='center'
@@ -75,20 +71,18 @@ export const Product = () => {
                             src={product.image}
                         />
                     </Flex>
-
                     <VStack spacing={3} flex={1} alignItems='start' justifyContent='center'>
                         <Box ml='20px'>
                             <Text fontSize='xx-large' noOfLines={3} mb={5}>{product.title}</Text>
                             <Divider my={3}/>
                             <Text>{product.description}</Text>
                         </Box>
-
                         <Flex
-                            border='1px solid' borderColor='gray.200' borderRadius='32px' ml='-20px' px={5} py={1}
-                            justifyContent='space-between' alignItems='center' w='100%' gap={2} my={5}>
+                            border='1px solid' borderColor='gray.200' borderRadius='32px' ml='-20px' p={5}
+                            justifyContent='space-between' alignItems='center' w='100%' gap={2} my={5} maxW='450px'>
                             <Text flex={1} color='red.600'
                                   fontSize='x-large'>{formatCurrency(Number(product.price))}</Text>
-                            <Box flex={1}>
+                            <Box flex={1} textAlign='right'>
                                 <Counter product={product} quantity={quantity}/>
                             </Box>
                         </Flex>

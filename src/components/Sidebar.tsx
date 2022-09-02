@@ -5,9 +5,8 @@ import {NavItem} from "./UI/NavItem";
 import {useCategory} from "../context/CategoryContext";
 
 export const Sidebar = () => {
-    const [categories, setCategories] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const {currentCategory, onChangeCurrentCategory} = useCategory();
+    const {currentCategory, categories, onChangeCurrentCategory, onChangeCategories} = useCategory();
 
     const fetchCategories = async () => {
         setIsLoading(true)
@@ -15,7 +14,7 @@ export const Sidebar = () => {
             .then(response => {
                 let result = response.data;
                 result.unshift('all');
-                setCategories(result);
+                onChangeCategories(result);
             }).catch(error => {
                 console.log(error);
             })

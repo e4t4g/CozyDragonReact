@@ -1,21 +1,29 @@
 import {
     Box,
+    Button,
+    Flex,
     Heading,
-    SimpleGrid
+    SimpleGrid,
+    useDisclosure
 } from '@chakra-ui/react';
-import React, {FC, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";
-import ProductSkeleton from "./UI/ProductSkeleton";
-import {IProduct} from '../models/IProduct';
-import ErrorMessage from "./UI/ErrorMessage";
-import {useCategory} from "../context/CategoryContext";
+import ProductSkeleton from "../UI/ProductSkeleton";
+import {IProduct} from '../../models/IProduct';
+import ErrorMessage from "../UI/ErrorMessage";
+import {useCategory} from "../../context/CategoryContext";
+import {GrAdd} from "react-icons/gr";
+import NewProductDrawer from './NewProductDrawer';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const {currentCategory} = useCategory();
+    const {isOpen, onOpen, onClose} = useDisclosure()
+
+    const isAdmin = false;
 
     const fetchProducts = async () => {
         setIsLoading(true);
@@ -57,16 +65,26 @@ const ProductList = () => {
             bg='gray.50'
             overflowY='auto'
         >
-            <Heading mb={5}>{currentCategory?.toUpperCase()}</Heading>
+            <Flex justifyContent='space-between' gap={5}>
+                <Heading mb={5}>{currentCategory?.toUpperCase()}</Heading>
+                {isAdmin && !error &&
+                    <Button rightIcon={<GrAdd/>} px={6} minW='fit-content' colorScheme='yellow' fontWeight='normal'
+                            onClick={onOpen}>
+                        Добавить новый товар
+                    </Button>
+                }
+            </Flex>
 
             {error && <ErrorMessage message={error}/>}
 
             {!error && <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
-                {isLoading && <SkeletonList/>}
-                {!isLoading && products.map(product => (
-                    <ProductItem product={product} key={product.id}/>
-                ))}
+                {isLoading ? <SkeletonList/> : (
+                    products.map(product => (
+                        <ProductItem product={product} key={product.id}/>
+                    ))
+                )}
             </SimpleGrid>}
+            <NewProductDrawer isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
         </Box>
     );
 };

@@ -9,10 +9,10 @@ const ErrorMessage = ({message}: ErrorMessageProps) => {
     return (
         <Box
             w='fit-content'
-            mt={12}
+            mt={6}
             px={6}
             py={4}
-            border='2px solid'
+            border='1px solid'
             borderColor='yellow.600'
             borderRadius='2xl'
             backgroundColor='yellow.100'

@@ -4,7 +4,7 @@ import {
     theme,
 } from "@chakra-ui/react"
 import {CartProvider} from "./context/CartContext";
-import {Layout} from "./components/Layout";
+import {Layout} from "./components/UI/Layout";
 import AppRouter from "./router/AppRouter";
 import {CategoryProvider} from "./context/CategoryContext";
 

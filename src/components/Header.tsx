@@ -4,18 +4,14 @@ import {
     Flex,
     Avatar,
     HStack,
-    IconButton,
     Button,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
     MenuDivider,
-    useDisclosure,
-    Stack,
     Text,
 } from '@chakra-ui/react';
-import {HamburgerIcon, CloseIcon} from '@chakra-ui/icons';
 import {MdFavorite} from 'react-icons/md';
 import {Link} from 'react-router-dom'
 import {BsBagFill} from 'react-icons/bs';
@@ -40,8 +36,9 @@ const NavLink = ({children}: { children: ReactNode }) => (
 );
 
 export const Header = () => {
-    const {isOpen, onOpen, onClose} = useDisclosure();
     const {onChangeCurrentCategory} = useCategory();
+
+    const isAdmin = false;
 
     return (
         <Flex bg='gray.100'
@@ -53,40 +50,32 @@ export const Header = () => {
               padding='20px'
               boxShadow='md'
               alignItems='center'
-              justifyContent={'space-between'}
-              zIndex={1500}
+              justifyContent='space-between'
+              zIndex={100}
         >
-            <IconButton
-                size={'md'}
-                icon={isOpen ? <CloseIcon/> : <HamburgerIcon/>}
-                aria-label={'Open Menu'}
-                display={{md: 'none'}}
-                onClick={isOpen ? onClose : onOpen}
-            />
             <Link to='/all' onClick={() => onChangeCurrentCategory('all')}>
                 <Flex alignItems='center' color='gray.600' textTransform={"uppercase"} ml={4}>
                     <svg width="52" height="52"
                          xmlns="http://www.w3.org/2000/svg">
-                        <image href="imgs/logo.svg" height="52" width="52"/>
+                        <image href="/imgs/logo.svg" height="52" width="52"/>
                     </svg>
                     <Text ml={2} fontStyle='italic' as='h1' fontSize='xx-large'>GB Store</Text>
                 </Flex>
             </Link>
             <Flex alignItems={'center'}>
-                <HStack
+                {<HStack
                     as={'nav'}
                     spacing={4}
-                    display={{base: 'none', md: 'flex'}}
                     marginX={6}
                     fontSize='25px'>
-                    {Links.map(({title, icon, path}) => (
+                    {!isAdmin && Links.map(({title, icon, path}) => (
                         <Link to={path} key={title}>
                             <NavLink>
                                 {icon}
                             </NavLink>
                         </Link>
                     ))}
-                </HStack>
+                </HStack>}
                 <Menu>
                     <MenuButton
                         as={Button}
@@ -102,30 +91,12 @@ export const Header = () => {
                         />
                     </MenuButton>
                     <MenuList>
-                        <MenuItem>Мои заказы</MenuItem>
+                        {!isAdmin && <MenuItem>Мои заказы</MenuItem>}
                         <MenuDivider/>
                         <MenuItem>Выйти</MenuItem>
                     </MenuList>
                 </Menu>
             </Flex>
-
-            {isOpen ? (
-                <Box pb={4} display={{md: 'none'}}>
-                    <Stack as={'nav'} spacing={4}>
-                        {Links.map(({title, icon}) => (
-                            <NavLink key={title}>
-                                <IconButton
-                                    variant="ghost"
-                                    color="current"
-                                    aria-label={title}
-                                    fontSize='25px'
-                                    icon={icon}
-                                />
-                            </NavLink>
-                        ))}
-                    </Stack>
-                </Box>
-            ) : null}
         </Flex>
     );
 }

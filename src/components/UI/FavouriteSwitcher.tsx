@@ -1,5 +1,5 @@
 import React from 'react';
-import {Flex, Icon} from "@chakra-ui/react";
+import {IconButton} from "@chakra-ui/react";
 import {FaHeart, FaRegHeart} from "react-icons/fa";
 
 interface FavouriteSwitcherProps {
@@ -15,28 +15,20 @@ export const FavouriteSwitcher = ({isFav}: FavouriteSwitcherProps) => {
     }
 
     return (
-        <Flex
-            position='absolute'
-            right={2}
-            top={2}
-            borderRadius='50%'
-            alignItems='center'
-            justifyContent='center'
-            backgroundColor='white'
-            h='40px'
-            w='40px'
-            color='gray.400'
-            fontSize='x-large'
-            cursor='pointer'
-            boxShadow='lg'
-            _hover={{color: 'gray.500'}}
-            onClick={() => isFav ? onDeleteFavourite() : onAddFavourite()}
-        >
-            {isFav ? (
-                <Icon as={FaHeart}/>
-            ) : (
-                <Icon as={FaRegHeart}/>
-            )}
-        </Flex>
+        <IconButton icon={isFav ? <FaHeart/> : <FaRegHeart/>}
+                    aria-label='Редактировать'
+                    position='absolute'
+                    right={2}
+                    top={2}
+                    borderRadius='50%'
+                    backgroundColor='white'
+                    color={isFav ? 'red' : 'gray.400'}
+                    boxShadow='lg'
+                    fontSize='x-large'
+                    _hover={{color: isFav ? 'gray.500' : 'red'}}
+                    _focus={{boxShadow: 'none'}}
+                    onClick={() => isFav ? onDeleteFavourite() : onAddFavourite()}
+        />
+
     );
 };

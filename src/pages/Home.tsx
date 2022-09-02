@@ -4,8 +4,8 @@ import {
     GridItem
 } from '@chakra-ui/react';
 import {Sidebar} from "../components/Sidebar";
-import ProductList from '../components/ProductList';
-import CartSidebar from "../components/CartSidebar";
+import ProductList from '../components/product/ProductList';
+import CartSidebar from "../components/cart/CartSidebar";
 
 export const Home = () => {
     return (
