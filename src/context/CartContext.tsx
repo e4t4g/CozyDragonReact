@@ -1,5 +1,5 @@
 import React, {ReactNode, useContext, useState} from "react";
-import { IProduct } from "../models/IProduct";
+import {IProduct} from "../models/IProduct";
 
 type CartProviderProps = {
     children: ReactNode
@@ -15,11 +15,17 @@ type CartContextProps = {
     closeCart: () => void
     isOpen: boolean
     getItemQuantity: (id: number) => number
+    getTotalQuantity: () => number
+    getTotalCost: () => number
+    getGoodsCost: () => number
+    getDeliveryCost: () => number
     increaseCartQuantity: (product: IProduct) => void
     decreaseCartQuantity: (product: IProduct) => void
     cartQuantity: number
     cartItems: CartItem[]
 }
+
+export const DELIVERY_COST_BASE = 100;
 
 const CartContext = React.createContext({} as CartContextProps);
 
@@ -36,6 +42,26 @@ export const CartProvider = ({children}: CartProviderProps) => {
 
     const getItemQuantity = (id: number) => {
         return cartItems.find(item => item.product.id === id)?.quantity || 0;
+    }
+
+    const getTotalQuantity = () => {
+        return cartItems.reduce((total, cartItem) => {
+            return total + cartItem.quantity
+        }, 0)
+    }
+
+    const getGoodsCost = () => {
+        return cartItems.reduce((total, cartItem) => {
+            return total + cartItem.quantity * Number(cartItem?.product?.price)
+        }, 0)
+    }
+
+    const getTotalCost = () => {
+        return getGoodsCost() + getDeliveryCost()
+    }
+
+    const getDeliveryCost = () => {
+        return getTotalQuantity() < 6 ? DELIVERY_COST_BASE : DELIVERY_COST_BASE * 3
     }
 
     const openCart = () => {
@@ -81,6 +107,10 @@ export const CartProvider = ({children}: CartProviderProps) => {
         <CartContext.Provider
             value={{
                 getItemQuantity,
+                getGoodsCost,
+                getTotalQuantity,
+                getTotalCost,
+                getDeliveryCost,
                 increaseCartQuantity,
                 decreaseCartQuantity,
                 cartQuantity,

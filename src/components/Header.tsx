@@ -1,6 +1,5 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {
-    Box,
     Flex,
     Avatar,
     HStack,
@@ -11,29 +10,43 @@ import {
     MenuItem,
     MenuDivider,
     Text,
+    IconButton,
 } from '@chakra-ui/react';
 import {MdFavorite} from 'react-icons/md';
 import {Link} from 'react-router-dom'
-import {BsBagFill} from 'react-icons/bs';
+import {BsBag, BsBagFill} from 'react-icons/bs';
 import {useCategory} from "../context/CategoryContext";
+import {useCart} from "../context/CartContext";
+import {formatCurrency} from "../utilities/formatCurrency";
+
+const CartButton = () => {
+    const {cartItems, getTotalCost} = useCart();
+    return (
+        <>
+            {cartItems.length > 0 ?
+                <Button leftIcon={<BsBagFill fontSize='x-large'/>} colorScheme='yellow' variant='solid'
+                        fontSize='large'>
+                    <Text as='span' pt={1} fontWeight='normal'>{formatCurrency(getTotalCost())}</Text>
+                </Button>
+                :
+                <IconButton
+                    aria-label='Корзина'
+                    fontSize='x-large'
+                    icon={<BsBagFill/>}
+                />
+            }
+        </>
+    )
+}
 
 const Links = [
-    {title: 'Favorite', icon: <MdFavorite/>, path: 'favourites'},
-    {title: 'Cart', icon: <BsBagFill/>, path: 'cart'}
+    {title: 'Cart', icon: <CartButton/>, path: 'cart'},
+    {
+        title: 'Favorite',
+        icon: <IconButton aria-label='Избранное' fontSize='x-large' icon={<MdFavorite/>}/>,
+        path: 'favourites'
+    }
 ];
-
-const NavLink = ({children}: { children: ReactNode }) => (
-    <Box
-        px={2}
-        py={1}
-        rounded={'md'}
-        _hover={{
-            textDecoration: 'none',
-            bg: 'gray.200',
-        }}>
-        {children}
-    </Box>
-);
 
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
@@ -47,7 +60,7 @@ export const Header = () => {
               left='0'
               w='100%'
               height='80px'
-              padding='20px'
+              padding={5}
               boxShadow='md'
               alignItems='center'
               justifyContent='space-between'
@@ -65,14 +78,12 @@ export const Header = () => {
             <Flex alignItems={'center'}>
                 {<HStack
                     as={'nav'}
-                    spacing={4}
+                    spacing={2}
                     marginX={6}
                     fontSize='25px'>
                     {!isAdmin && Links.map(({title, icon, path}) => (
                         <Link to={path} key={title}>
-                            <NavLink>
-                                {icon}
-                            </NavLink>
+                            {icon}
                         </Link>
                     ))}
                 </HStack>}

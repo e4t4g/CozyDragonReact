@@ -95,7 +95,7 @@ const NewProductDrawer = ({isOpen, onOpen, onClose}: NewProductDrawerProps) => {
                 >
                     <Form style={{height: '100%'}}>
                         <DrawerBody style={{height: '100%'}}>
-                            <Stack spacing='24px' py={4}>
+                            <Stack spacing={6} py={4}>
                                 <FormControl>
                                     <FormLabel htmlFor='category' fontSize='sm' color='gray.400'>Категория
                                         товара</FormLabel>

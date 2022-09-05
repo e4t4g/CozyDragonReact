@@ -72,13 +72,13 @@ export const Product = () => {
                         />
                     </Flex>
                     <VStack spacing={3} flex={1} alignItems='start' justifyContent='center'>
-                        <Box ml='20px'>
+                        <Box ml={4}>
                             <Text fontSize='xx-large' noOfLines={3} mb={5}>{product.title}</Text>
                             <Divider my={3}/>
                             <Text>{product.description}</Text>
                         </Box>
                         <Flex
-                            border='1px solid' borderColor='gray.200' borderRadius='32px' ml='-20px' p={5}
+                            border='1px solid' borderColor='gray.200' borderRadius='2xl' ml={-4} p={4}
                             justifyContent='space-between' alignItems='center' w='100%' gap={2} my={5} maxW='450px'>
                             <Text flex={1} color='red.600'
                                   fontSize='x-large'>{formatCurrency(Number(product.price))}</Text>

@@ -6,7 +6,7 @@ import {
     Flex,
     Image,
     Button,
-    HStack, Icon
+    HStack, Icon, Box
 } from '@chakra-ui/react';
 import React from 'react';
 import {useCart} from "../../context/CartContext";
@@ -17,13 +17,13 @@ import {BsBag} from "react-icons/bs";
 import {useCategory} from "../../context/CategoryContext";
 
 const CartSidebar = () => {
-    const {cartItems} = useCart();
+    const {cartItems, getTotalCost, getDeliveryCost} = useCart();
     const {currentCategory} = useCategory();
 
     const CartList = () => (
         <>
             {cartItems.length > 0
-                ? <List flexGrow={1} spacing={3} overflowY='auto' py={5} mr={1}>
+                ? <List flexGrow={1} spacing={3} overflowY='auto' py={5} pr={1}>
                     {cartItems.map(({product, quantity}) => (
                         <ListItem key={product.id}>
                             <HStack spacing={3}>
@@ -77,11 +77,7 @@ const CartSidebar = () => {
                     >
                         Перейти в корзину&nbsp;
                         <Text as={"span"} fontSize='xl' fontWeight='bold'>
-                            {formatCurrency(
-                                cartItems.reduce((total, cartItem) => {
-                                    return total + cartItem.quantity * Number(cartItem?.product?.price)
-                                }, 0)
-                            )}
+                            {formatCurrency(getTotalCost())}
                         </Text>
                     </Button>
                 </Link>
@@ -104,6 +100,12 @@ const CartSidebar = () => {
         >
             <Heading>Корзина</Heading>
             <CartList/>
+            {cartItems.length > 0 &&
+                <Box borderTop='1px solid' borderColor='gray.300' pt={3} pr={3} color='gray' fontSize='sm'
+                     textAlign='right'>
+                    <Text>Доставка 15–30 мин </Text>
+                    <Text>{formatCurrency(getDeliveryCost())}</Text>
+                </Box>}
             <CartLink/>
         </Flex>
 

@@ -13,7 +13,7 @@ export const EditPrice = ({price, updatePrice}: EditPriceProps) => {
     const [isEditMode, setIsEditMode] = useState(false);
     return (
         <Flex
-            border='1px solid' borderColor='gray.300' borderRadius='32px' px={5} py={3} gap={4} alignItems='center'>
+            border='1px solid' borderColor='gray.300' borderRadius='2xl' px={5} py={3} gap={4} alignItems='center'>
             {isEditMode ? (
                 <>
                     <Input

@@ -24,7 +24,6 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
     const {currentCategory} = useCategory();
     const quantity = getItemQuantity(id);
 
-
     const isFav = true;
     const isAdmin = false;
 

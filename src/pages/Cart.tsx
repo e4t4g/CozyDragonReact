@@ -4,15 +4,10 @@ import {
     Box,
     Button,
     Flex,
-    FormControl,
     Heading,
     HStack,
     Icon,
     Image,
-    Input,
-    InputGroup,
-    InputLeftAddon,
-    InputLeftElement,
     List,
     ListItem,
     Spacer,
@@ -21,113 +16,47 @@ import {
     Tbody,
     Td,
     Text,
-    Textarea,
     Tfoot,
     Th,
-    Tr,
-    VStack
+    Tr
 } from "@chakra-ui/react";
 import {formatCurrency} from "../utilities/formatCurrency";
 import {Link} from 'react-router-dom';
-import {BsBag, BsPerson} from 'react-icons/bs';
-import {MdOutlineEmail} from 'react-icons/md';
-import {BiHomeAlt} from 'react-icons/bi';
+import {BsBag} from 'react-icons/bs';
 import Counter from "../components/UI/Counter";
-import { useCategory } from '../context/CategoryContext';
+import {useCategory} from '../context/CategoryContext';
 import MainBlockLayout from '../components/UI/MainBlockLayout';
+import {OrderForm} from '../components/cart/OrderForm';
 
 export const Cart = () => {
-    const {cartItems} = useCart();
+    const {cartItems, getTotalCost, getGoodsCost, getDeliveryCost, getTotalQuantity} = useCart();
     const {currentCategory} = useCategory();
 
-    const deliveryCost = 100;
-
     const TotalCostTable = () => (
-        <TableContainer mx='-20px' mt={2} mb={4}>
+        <TableContainer mx={-5} mt={2} mb={4}>
             <Table variant='unstyled'>
                 <Tbody borderTop='1px solid' borderColor='gray.200'>
                     <Tr>
                         <Td>Товары</Td>
                         <Td fontWeight='bold'>
-                            {formatCurrency(
-                                cartItems.reduce((total, cartItem) => {
-                                    return total + cartItem.quantity * Number(cartItem?.product?.price)
-                                }, 0)
-                            )}
+                            {formatCurrency(getGoodsCost())}
                         </Td>
                     </Tr>
                     <Tr>
                         <Td>Доставка</Td>
-                        <Td fontWeight='bold'>{formatCurrency(deliveryCost)}</Td>
+                        <Td fontWeight='bold'>{formatCurrency(getDeliveryCost())}</Td>
                     </Tr>
                 </Tbody>
                 <Tfoot>
                     <Tr borderTop='1px solid' borderColor='gray.200'>
                         <Th fontSize='large' fontWeight='bold'>К оплате</Th>
                         <Th isNumeric fontSize='large' fontWeight='bold'>
-                            {formatCurrency(
-                                cartItems.reduce((total, cartItem) => {
-                                    return total + cartItem.quantity * Number(cartItem?.product?.price)
-                                }, 0) + deliveryCost
-                            )}
+                            {formatCurrency(getTotalCost())}
                         </Th>
                     </Tr>
                 </Tfoot>
             </Table>
         </TableContainer>
-    );
-
-    const OrderForm = () => (
-        <VStack spacing={3} pr={5}>
-            <FormControl id="name">
-                <InputGroup borderColor="#E0E1E7">
-                    <InputLeftElement
-                        pointerEvents="none"
-                        children={<BsPerson color="gray.800"/>}
-                    />
-                    <Input type="text" size="md" placeholder='Ваше имя'/>
-                </InputGroup>
-            </FormControl>
-            <FormControl id="address">
-                <InputGroup borderColor="#E0E1E7">
-                    <InputLeftElement
-                        pointerEvents="none"
-                        children={<BiHomeAlt color="gray.800"/>}
-                    />
-                    <Input type="text" size="md" placeholder='Улица, номер дома, номер квартиры'/>
-                </InputGroup>
-            </FormControl>
-
-            <FormControl id="mail">
-                <InputGroup borderColor="#E0E1E7">
-                    <InputLeftElement
-                        pointerEvents="none"
-                        children={<MdOutlineEmail color="gray.800"/>}
-                    />
-                    <Input type="text" size="md" placeholder='Email'/>
-                </InputGroup>
-            </FormControl>
-            <FormControl id="phone">
-                <InputGroup borderColor="#E0E1E7">
-                    <InputGroup>
-                        <InputLeftAddon children='+7'/>
-                        <Input type='tel' placeholder='Номер телефона'/>
-                    </InputGroup>
-                </InputGroup>
-            </FormControl>
-            <FormControl id="comment">
-                <Textarea
-                    placeholder="Комментарий курьеру"
-                />
-            </FormControl>
-            <FormControl id="name" float="right">
-                <Button
-                    variant="solid"
-                    colorScheme='yellow'>
-                    Отправить заказ
-                </Button>
-            </FormControl>
-        </VStack>
     );
 
     const EmptyCart = () => (
@@ -144,14 +73,15 @@ export const Cart = () => {
     );
 
     const OrderList = () => (
-        <Box flex={1} overflow='hidden' height='calc(100vh - 300px)'>
-            <List overflow='auto' height='100%'>
+        <Flex flex={1} overflow='hidden' height='calc(100vh - 300px)' flexDirection='column'>
+            <List overflow='auto'>
                 {cartItems.map(({product, quantity}) => (
                     <ListItem key={product.id} p={3}>
                         <HStack spacing={3}>
-                            <Link to={`/${currentCategory}/${product.id}/${product.title}`} style={{display: "flex", alignItems: 'center'}}>
-                                <Flex maxH='100px'
-                                      maxW='100px'
+                            <Link to={`/${currentCategory}/${product.id}/${product.title}`}
+                                  style={{display: "flex", alignItems: 'center'}}>
+                                <Flex maxH='110px'
+                                      maxW='110px'
                                       justifyContent='center'
                                 >
                                     <Image
@@ -161,7 +91,7 @@ export const Cart = () => {
                                         src={product.image}
                                     />
                                 </Flex>
-                                <Flex flexGrow={1} flexDirection='column'>
+                                <Flex flexGrow={1} flexDirection='column' px={4}>
                                     <Text fontSize='sm'>{product.title}</Text>
                                     <Text fontSize='sm'
                                           color='gray.500'>{formatCurrency(Number(product.price))}</Text>
@@ -173,7 +103,10 @@ export const Cart = () => {
                     </ListItem>
                 ))}
             </List>
-        </Box>
+            <Text alignSelf='end' color='gray' fontSize='sm' pt={3} pr={3}>
+                Общее количество товаров: {getTotalQuantity()}
+            </Text>
+        </Flex>
     )
 
     return (

@@ -21,8 +21,6 @@ export const EditProduct = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [product, setProduct] = useState({} as IProduct);
 
-    const isAdmin = false;
-
     useEffect(() => {
         getProduct();
     }, []);

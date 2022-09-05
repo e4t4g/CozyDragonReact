@@ -14,21 +14,21 @@ const Counter = ({product, quantity}: CounterProps) => {
     return (
         <>
             {quantity === 0 ? (
-                <Button colorScheme='yellow'
+                <Button backgroundColor='gray.50'
                         rounded='2xl'
                         width='100%'
                         px={8}
                         py={6}
-                        boxShadow='md'
                         transition='all .3s ease'
-                        _hover={{transform: 'scale(1.05)'}}
+                        _hover={{boxShadow: 'md'}}
                         onClick={() => increaseCartQuantity(product)}
                 >
                     В корзину
                 </Button>
             ) : (
-                <HStack rounded='2xl' backgroundColor='white' boxShadow='md'
-                        cursor='default' justifyContent='space-around'>
+                <HStack rounded='2xl' backgroundColor='gray.50'
+                        cursor='default' justifyContent='space-around' transition='all .3s ease'
+                        _hover={{boxShadow: 'md'}}>
                     <IconButton aria-label='Уменьшить количество'
                                 icon={<FaMinus/>}
                                 variant='ghost'
