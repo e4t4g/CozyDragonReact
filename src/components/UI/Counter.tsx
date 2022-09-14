@@ -15,6 +15,8 @@ const Counter = ({product, quantity}: CounterProps) => {
         <>
             {quantity === 0 ? (
                 <Button backgroundColor='gray.50'
+                        border='1px solid'
+                        borderColor='gray.100'
                         rounded='2xl'
                         width='100%'
                         px={8}
@@ -26,8 +28,13 @@ const Counter = ({product, quantity}: CounterProps) => {
                     В корзину
                 </Button>
             ) : (
-                <HStack rounded='2xl' backgroundColor='gray.50'
-                        cursor='default' justifyContent='space-around' transition='all .3s ease'
+                <HStack rounded='2xl'
+                        backgroundColor='gray.50'
+                        border='1px solid'
+                        borderColor='gray.100'
+                        justifyContent='space-around'
+                        cursor='default'
+                        transition='all .3s ease'
                         _hover={{boxShadow: 'md'}}>
                     <IconButton aria-label='Уменьшить количество'
                                 icon={<FaMinus/>}

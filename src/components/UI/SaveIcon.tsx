@@ -11,14 +11,12 @@ export const SaveIcon = ({onSave, isDisabled}: SaveIconProps) => {
     return (
         <IconButton icon={<MdDone/>}
                     aria-label='Сохранить'
-                    backgroundColor='white'
-                    color='gray.500'
+                    colorScheme='yellow'
                     border='1px solid'
                     borderColor='gray.300'
                     borderRadius='50%'
                     fontSize='xx-large'
                     disabled={isDisabled}
-                    _hover={{color: 'yellow.500', boxShadow: 'lg'}}
                     _focus={{boxShadow: 'none'}}
                     onClick={onSave}/>
     );
