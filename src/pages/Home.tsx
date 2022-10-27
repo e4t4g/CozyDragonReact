@@ -3,7 +3,7 @@ import {
     Grid,
     GridItem
 } from '@chakra-ui/react';
-import {Sidebar} from "../components/Sidebar";
+import {CategoryList} from "../components/CategoryList";
 import ProductList from '../components/product/ProductList';
 import CartSidebar from "../components/cart/CartSidebar";
 
@@ -15,9 +15,10 @@ export const Home = () => {
             gridTemplateColumns={'220px 1fr 450px'}
             h='100%'
             color='blackAlpha.800'
+            bg='gray.50'
         >
             <GridItem area={'nav'}>
-                <Sidebar/>
+                <CategoryList/>
             </GridItem>
             <GridItem area={'main'} overflow={"hidden"}>
                 <ProductList/>

@@ -23,22 +23,26 @@ const CartSidebar = () => {
     const CartList = () => (
         <>
             {cartItems.length > 0
-                ? <List flexGrow={1} spacing={3} overflowY='auto' py={5} pr={1}>
+                ? <List flexGrow={1} spacing={1} overflowY='auto' py={5} pr={1}>
                     {cartItems.map(({product, quantity}) => (
                         <ListItem key={product.id}>
                             <HStack spacing={3}>
-                                <Link to={`/${currentCategory}/${product.id}/${product.title}`}
+                                <Link to={`/${currentCategory?.name?.toLowerCase() ?? '/all'}/${product.id}/${product.title}`}
                                       style={{display: "flex", alignItems: 'center', flex: 1}}>
                                     <Flex maxH='100px'
                                           maxW='100px'
                                           justifyContent='center'
                                           p={1}
+                                          mr={2}
                                     >
                                         <Image
                                             maxH='100%'
                                             maxW='100%'
+                                            minH='100px'
+                                            minW='100px'
                                             objectFit={'contain'}
-                                            src={product.image}
+                                            src={product.images[0]}
+                                            fallbackSrc={'/imgs/placeholder-image.jpg'}
                                         />
                                     </Flex>
                                     <Flex gap={2} flexDirection='column'>
@@ -98,7 +102,7 @@ const CartSidebar = () => {
             borderLeft="1px"
             borderLeftColor='gray.200'
         >
-            <Heading>Корзина</Heading>
+            <Heading fontSize='x-large'>Корзина</Heading>
             <CartList/>
             {cartItems.length > 0 &&
                 <Box borderTop='1px solid' borderColor='gray.300' pt={3} pr={3} color='gray' fontSize='sm'

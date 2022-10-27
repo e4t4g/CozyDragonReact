@@ -12,19 +12,17 @@ import {IProduct} from '../../models/IProduct';
 import {formatCurrency} from "../../utilities/formatCurrency";
 import Counter from "../UI/Counter";
 import {FavouriteSwitcher} from "../UI/FavouriteSwitcher";
-import {useCategory} from "../../context/CategoryContext";
 
 interface ProductItemProps {
     product: IProduct
 }
 
 export const ProductItem: FC<ProductItemProps> = ({product}) => {
-    const {id, image, price, title} = product;
+    const {id, images, price, title} = product;
     const {getItemQuantity} = useCart();
-    const {currentCategory} = useCategory();
     const quantity = getItemQuantity(id);
 
-    const isFav = true;
+    const isFav = false;
     const isAdmin = false;
 
     return (
@@ -42,17 +40,16 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
         >
             {!isAdmin && <FavouriteSwitcher isFav={isFav}/>}
             <Box p={4}>
-                <Link to={isAdmin ? `/edit/${id}/${title}` : `/${currentCategory}/${product.id}/${product.title}`}>
-
+                <Link to={isAdmin ? `/edit/${id}/${title}` : `/${product.category?.name?.toLowerCase()}/${product.id}/${product.title}`}>
                     <Flex height='250px' width='100%' justifyContent='center'>
                         <Image
                             maxH='100%'
                             maxW='100%'
                             objectFit={'contain'}
-                            src={image}
+                            src={images[0]}
+                            fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>
-
                     <Stack height='130px' alignItems='start' justifyContent='center'>
                         <Text fontWeight={700} fontSize={'xl'}>
                             {formatCurrency(Number(price))}

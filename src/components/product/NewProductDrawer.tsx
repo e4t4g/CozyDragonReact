@@ -1,18 +1,26 @@
 import React, {useState} from 'react';
 import {
-    Button, Drawer,
+    Button,
+    Drawer,
     DrawerBody,
     DrawerCloseButton,
-    DrawerContent, DrawerFooter,
+    DrawerContent,
+    DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
-    FormLabel, Input, Text, Select,
-    Stack, Textarea, FormControl
+    FormControl,
+    FormLabel,
+    Input,
+    Select,
+    Stack,
+    Text,
+    Textarea
 } from "@chakra-ui/react";
-import {Formik, Field, Form, FormikHelpers} from 'formik';
+import {Field, Form, Formik, FormikHelpers} from 'formik';
 import * as Yup from "yup";
 import {useCategory} from "../../context/CategoryContext";
 import axios from "axios";
+import {ToastError, ToastSuccess} from "../../utilities/error-handling";
 
 interface Values {
     title: string;
@@ -24,11 +32,10 @@ interface Values {
 
 interface NewProductDrawerProps {
     isOpen: boolean,
-    onOpen: () => void,
     onClose: () => void,
 }
 
-const NewProductDrawer = ({isOpen, onOpen, onClose}: NewProductDrawerProps) => {
+const NewProductDrawer = ({isOpen, onClose}: NewProductDrawerProps) => {
     const {currentCategory, categories} = useCategory();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -49,15 +56,19 @@ const NewProductDrawer = ({isOpen, onOpen, onClose}: NewProductDrawerProps) => {
     });
 
     const onAddNewProduct = async (values: Values) => {
+        const selectedCategory = categories.find(i => i.name === values.category);
+        const result = {...values, category: selectedCategory};
         setIsLoading(true);
-        await axios.put('https://fakestoreapi.com/products', values)
-            .then((res) => console.log(res))
+        await axios.put('https://fakestoreapi.com/products', result)
+            .then(() => {
+                ToastSuccess('The product was successfully added')
+                setTimeout(() => onClose(), 2000)
+            })
             .catch(error => {
-                console.log(error);
+                ToastError(error.message);
             })
             .finally(() => {
                 setIsLoading(false);
-                setTimeout(() => onClose(), 2000)
             });
     }
 
@@ -82,7 +93,7 @@ const NewProductDrawer = ({isOpen, onOpen, onClose}: NewProductDrawerProps) => {
                         price: '',
                         description: '',
                         image: '',
-                        category: currentCategory,
+                        category: currentCategory.name,
                     }}
                     validationSchema={ValidationSchema}
                     onSubmit={(
@@ -103,9 +114,10 @@ const NewProductDrawer = ({isOpen, onOpen, onClose}: NewProductDrawerProps) => {
                                         {({field, meta}: any) => (
                                             <>
                                                 <Select id='category' name='category'
-                                                        value={currentCategory} {...field}>
+                                                        {...field}>
                                                     {categories.map(category => (
-                                                        <option value={category} key={category}>{category}</option>
+                                                        <option value={category.name}
+                                                                key={category.id}>{category.name}</option>
                                                     ))}
                                                 </Select>
                                                 {meta.touched && meta.error && (

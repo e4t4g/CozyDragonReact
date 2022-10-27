@@ -5,7 +5,7 @@ import {Header} from '../Header';
 
 export const Layout: FC<PropsWithChildren<{}>> = ({children}) => {
     return (
-        <Box>
+        <Box bg='gray.50'>
             <Header/>
             <main style={{minHeight: 'calc(100vh - 80px - 61px)'}}>
                 {children}

@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Box,
-    Divider,
-    Flex,
-    Image,
-    Skeleton,
-    SkeletonText,
-    Text,
-    VStack
-} from "@chakra-ui/react";
+import {Box, Flex, Image, Skeleton, SkeletonText, Text, VStack} from "@chakra-ui/react";
 import {useParams} from 'react-router-dom';
 import axios from "axios";
 import {IProduct} from "../models/IProduct";
@@ -17,6 +8,7 @@ import Counter from "../components/UI/Counter";
 import {useCart} from "../context/CartContext";
 import {FavouriteSwitcher} from "../components/UI/FavouriteSwitcher";
 import MainBlockLayout from "../components/UI/MainBlockLayout";
+import {isEmpty} from "../utilities/isEmpty";
 
 export const Product = () => {
     const {productId} = useParams();
@@ -27,9 +19,12 @@ export const Product = () => {
     const quantity = getItemQuantity(Number(productId));
 
     const getProduct = async () => {
-        setIsLoading(true)
-        await axios.get(`https://fakestoreapi.com/products/${productId}`)
+        setIsLoading(true);
+        console.log('productId', productId);
+        await axios
+            .get(`https://api.escuelajs.co/api/v1/products/${productId}`)
             .then(response => {
+                console.log('response.data', response.data)
                 setProduct(response.data);
             }).catch(error => {
                 console.log(error);
@@ -55,10 +50,11 @@ export const Product = () => {
                 </Flex>
             </Flex>}
 
-            {!isLoading && product &&
-                <Flex gap={5} pt={10}>
+            {!isLoading && !isEmpty(product) &&
+                <Flex gap={10} pt={10}>
                     <Flex maxH='500px'
                           maxW='500px'
+                          minW='200px'
                           justifyContent='center'
                           flex={2}
                           position='relative'
@@ -67,23 +63,24 @@ export const Product = () => {
                         <Image
                             maxH='100%'
                             maxW='100%'
+                            minH='500px'
+                            minW='500px'
                             objectFit={'contain'}
-                            src={product.image}
+                            src={product.images[0]}
+                            fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>
-                    <VStack spacing={3} flex={1} alignItems='start' justifyContent='center'>
-                        <Box ml={4}>
-                            <Text fontSize='xx-large' noOfLines={3} mb={5}>{product.title}</Text>
-                            <Divider my={3}/>
-                            <Text>{product.description}</Text>
-                        </Box>
+                    <VStack spacing={8} flex={1} alignItems='start' justifyContent='center'>
+                        <Text fontSize='xx-large' noOfLines={3}>{product.title}</Text>
+                        <Text>{product.description}</Text>
                         <Flex
-                            border='1px solid' borderColor='gray.200' borderRadius='2xl' ml={-4} p={4}
-                            justifyContent='space-between' alignItems='center' w='100%' gap={2} my={5} maxW='450px'>
+                            border='1px solid' borderColor='gray.200' borderRadius='2xl' p={4}
+                            justifyContent='space-between' alignItems='center' minW='350px' w='100%' gap={3} my={5}
+                            maxW='450px'>
                             <Text flex={1} color='red.600'
                                   fontSize='x-large'>{formatCurrency(Number(product.price))}</Text>
                             <Box flex={1} textAlign='right'>
-                                <Counter product={product} quantity={quantity}/>
+                                <Counter product={product} quantity={quantity} buttonColor='yellow.400'/>
                             </Box>
                         </Flex>
                     </VStack>

@@ -64,7 +64,7 @@ export const Cart = () => {
             <Icon fontSize='140px' color='gray.400' as={BsBag}/>
             <Heading fontSize='xx-large' my={2}>В вашей корзине пока пусто</Heading>
             <Text color='gray'>Тут появятся товары, которые вы закажете.</Text>
-            <Link to={`/${currentCategory}`}>
+            <Link to={`/${currentCategory?.name?.toLowerCase() ?? 'all'}`}>
                 <Button colorScheme='yellow' px={10} mt={10}>
                     В каталог
                 </Button>
@@ -76,9 +76,9 @@ export const Cart = () => {
         <Flex flex={1} overflow='hidden' height='calc(100vh - 300px)' flexDirection='column'>
             <List overflow='auto'>
                 {cartItems.map(({product, quantity}) => (
-                    <ListItem key={product.id} p={3}>
+                    <ListItem key={product.id} pr={2}>
                         <HStack spacing={3}>
-                            <Link to={`/${currentCategory}/${product.id}/${product.title}`}
+                            <Link to={`/${currentCategory?.name?.toLowerCase() ?? '/all'}/${product.id}/${product.title}`}
                                   style={{display: "flex", alignItems: 'center'}}>
                                 <Flex maxH='110px'
                                       maxW='110px'
@@ -87,8 +87,11 @@ export const Cart = () => {
                                     <Image
                                         maxH='100%'
                                         maxW='100%'
+                                        minH='110px'
+                                        minW='110px'
                                         objectFit={'contain'}
-                                        src={product.image}
+                                        src={product.images[0]}
+                                        fallbackSrc={'/imgs/placeholder-image.jpg'}
                                     />
                                 </Flex>
                                 <Flex flexGrow={1} flexDirection='column' px={4}>

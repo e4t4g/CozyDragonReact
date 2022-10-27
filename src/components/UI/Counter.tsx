@@ -6,17 +6,19 @@ import {IProduct} from '../../models/IProduct';
 
 interface CounterProps {
     product: IProduct,
-    quantity: number
+    quantity: number,
+    buttonColor?: string
 }
 
-const Counter = ({product, quantity}: CounterProps) => {
+const Counter = ({product, quantity, buttonColor = 'gray.50'}: CounterProps) => {
     const {increaseCartQuantity, decreaseCartQuantity} = useCart();
     return (
         <>
             {quantity === 0 ? (
-                <Button backgroundColor='gray.50'
+                <Button backgroundColor={buttonColor}
                         border='1px solid'
-                        borderColor='gray.100'
+                        borderColor={buttonColor ?? 'gray.200'}
+                        boxShadow='sm'
                         rounded='2xl'
                         width='100%'
                         px={8}
@@ -31,9 +33,10 @@ const Counter = ({product, quantity}: CounterProps) => {
                 <HStack rounded='2xl'
                         backgroundColor='gray.50'
                         border='1px solid'
-                        borderColor='gray.100'
+                        borderColor='gray.200'
                         justifyContent='space-around'
                         cursor='default'
+                        boxShadow='sm'
                         transition='all .3s ease'
                         _hover={{boxShadow: 'md'}}>
                     <IconButton aria-label='Уменьшить количество'

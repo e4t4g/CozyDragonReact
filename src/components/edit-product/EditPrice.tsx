@@ -17,20 +17,21 @@ export const EditPrice = ({price, updatePrice}: EditPriceProps) => {
             {isEditMode ? (
                 <>
                     <Input
+                        value={price}
                         px={4}
                         py={4}
                         m={0}
                         width='150px'
                         fontSize='x-large'
-                        value={price}
                         type={"number"}
+                        _focus={{borderColor: 'yellow.500'}}
                         onChange={(e) => updatePrice(e.target.value)}/>
                     <SaveIcon isDisabled={price.length === 0}
                               onSave={() => setIsEditMode(false)}/>
                 </>
             ) : (
                 <>
-                    <Text fontSize='x-large'>{formatCurrency(Number(price))}</Text>
+                    <Text fontSize='x-large' cursor='text' onClick={() => setIsEditMode(true)}>{formatCurrency(Number(price))}</Text>
                     <EditIcon onEdit={() => setIsEditMode(true)}/>
                 </>
             )}

@@ -15,11 +15,11 @@ export const EditDescription = ({description, updateDescription}: EditDescriptio
             {isDescEditMode ? (
                 <>
                     <Textarea
-                        border='1px solid'
                         borderColor='gray.300'
                         rows={6}
                         py={3}
                         value={description}
+                        _focus={{borderColor: 'yellow.500'}}
                         onChange={(e) => updateDescription(e.target.value)}/>
 
                     <SaveIcon isDisabled={description.length === 0}
@@ -27,7 +27,7 @@ export const EditDescription = ({description, updateDescription}: EditDescriptio
                 </>
             ) : (
                 <>
-                    <Text>{description}</Text>
+                    <Text onClick={() => setIsDescEditMode(true)} cursor='text'>{description}</Text>
                     <EditIcon onEdit={() => setIsDescEditMode(true)}/>
                 </>
             )}

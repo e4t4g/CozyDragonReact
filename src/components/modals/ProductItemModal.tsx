@@ -43,7 +43,7 @@ const ProductItemModal: FC<ProductItemModalInterface> = ({product, onOpen, isOpe
                         <Heading fontSize='lg'>
                             {product.title} - {formatCurrency(Number(product.price))}
                         </Heading>
-                        <Text fontSize='sm'>Category: {product.category}</Text>
+                        <Text fontSize='sm'>Category: {product.category.name}</Text>
                         <Text fontSize='sm'>Description: {product.description}</Text>
                     </ModalBody>
 

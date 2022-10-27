@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
     Button,
+    Checkbox,
     Divider,
     Flex,
     Skeleton,
@@ -15,36 +16,71 @@ import EditTitle from "../components/edit-product/EditTitle";
 import {EditDescription} from "../components/edit-product/EditDescription";
 import {EditPrice} from '../components/edit-product/EditPrice';
 import {EditImage} from "../components/edit-product/EditImage";
+import {useCategory} from "../context/CategoryContext";
+import EditCategory from "../components/edit-product/EditCategory";
+
+import ErrorMessage from "../components/UI/ErrorMessage";
+import {isEmpty} from "../utilities/isEmpty";
+import {ICategory} from "../models/ICategory";
+import { MdDelete } from 'react-icons/md';
 
 export const EditProduct = () => {
     const {productId} = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const [product, setProduct] = useState({} as IProduct);
+    const [error, setError] = useState('');
+    const {categories, currentCategory} = useCategory();
 
-    useEffect(() => {
-        getProduct();
-    }, []);
+    const [isInStock, setIsInStock] = useState(false);
 
     const getProduct = async () => {
         setIsLoading(true);
-        await axios.get(`https://fakestoreapi.com/products/${productId}`)
+        await axios
+            .get(`https://api.escuelajs.co/api/v1/products/${productId}`)
             .then(({data}) => {
+                console.log(data)
                 setProduct(data);
             }).catch(error => {
-                console.log(error);
+                setError(error.message);
             })
             .finally(() => {
                 setIsLoading(false);
             });
     };
 
+    useEffect(() => {
+        getProduct();
+    }, []);
+
+    const updateCategory = (categoryName: string) => {
+        const selectedCategory: ICategory = categories.find(category => category.name === categoryName) ?? currentCategory;
+        setProduct({...product, category: selectedCategory})
+    }
+
     const updateTitle = (v: string) => setProduct({...product, title: v})
     const updateDescription = (v: string) => setProduct({...product, description: v})
     const updatePrice = (v: string) => setProduct({...product, price: v})
-    const updateImage = (v: string) => setProduct({...product, image: v})
+    const updateImage = (v: string) => {
+        //todo: rewrite -->
+        const imgs = product.images;
+        imgs.shift();
+        imgs.unshift(v);
+        setProduct({...product, images: imgs})
+    }
+
+    // const updateIsInStock = (e: ChangeEvent<HTMLInputElement>) => setProduct({...product, inStock: e.target.value})
+    const updateIsInStock = (e: any) => {
+        setIsInStock(e.target.checked)
+    }
 
     const onSaveChanges = async () => {
-        await axios.put(`https://fakestoreapi.com/products/${productId}`, product).then((res) => console.log(res));
+        await axios.put(`https://fakestoreapi.com/products/${productId}`, product)
+            .then((res) => console.log(res));
+    }
+
+    const onRemoveProduct = async () => {
+        await axios.delete(`https://fakestoreapi.com/products/${productId}`)
+            .then((res) => console.log(res));
     }
 
     return (
@@ -57,10 +93,16 @@ export const EditProduct = () => {
                     <Skeleton height='48px' w='144px' mt={8} borderRadius='2xl'/>
                 </Flex>
             </Flex>}
-            {!isLoading && product &&
-                <Flex gap={5} pt={20}>
-                    <EditImage image={product.image} updateImage={updateImage}/>
-                    <VStack spacing={7} flex={1} alignItems='start' justifyContent='center'>
+            {!isLoading && error && <ErrorMessage message={error}/>}
+            {!isLoading && !isEmpty(product) &&
+                <Flex gap={5} pt={20} minH='555px'>
+                    <EditImage images={product?.images} updateImage={updateImage}/>
+                    <VStack spacing={4} flex={1} alignItems='start' justifyContent='center' alignSelf='start'>
+                        <EditCategory category={product.category} updateCategory={updateCategory}/>
+                        <Checkbox colorScheme='yellow' isChecked={isInStock} onChange={updateIsInStock}>
+                            Есть в наличии
+                        </Checkbox>
+                        <Divider/>
                         <EditTitle
                             title={product.title}
                             updateTitle={updateTitle}
@@ -73,15 +115,30 @@ export const EditProduct = () => {
                             price={product.price}
                             updatePrice={updatePrice}/>
                         <Divider/>
-                        <Button colorScheme='yellow'
+                        <Flex gap={4}>
+                            <Button
+                                leftIcon={<MdDelete/>}
+                                colorScheme='red'
                                 boxShadow='md'
                                 rounded='2xl'
+                                variant='outline'
                                 px={6}
                                 py={6}
-                                onClick={() => onSaveChanges()}
-                        >
-                            Сохранить изменения
-                        </Button>
+                                onClick={() => onRemoveProduct()}
+
+                            >
+                                Удалить товар
+                            </Button>
+                            <Button colorScheme='yellow'
+                                    boxShadow='md'
+                                    rounded='2xl'
+                                    px={6}
+                                    py={6}
+                                    onClick={() => onSaveChanges()}
+                            >
+                                Сохранить изменения
+                            </Button>
+                        </Flex>
                     </VStack>
                 </Flex>
             }

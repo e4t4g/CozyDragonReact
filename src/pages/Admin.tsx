@@ -1,6 +1,6 @@
 import React from 'react';
 import {Grid, GridItem} from "@chakra-ui/react";
-import {Sidebar} from "../components/Sidebar";
+import {CategoryList} from "../components/CategoryList";
 import ProductList from "../components/product/ProductList";
 
 export const Admin = () => {
@@ -9,12 +9,13 @@ export const Admin = () => {
             <Grid
                 templateAreas={`"nav main"`}
                 gridTemplateRows={'1fr'}
-                gridTemplateColumns={'220px 1fr'}
+                gridTemplateColumns={'320px 1fr'}
                 h='100%'
                 color='blackAlpha.800'
+                bg='gray.50'
             >
                 <GridItem area={'nav'}>
-                    <Sidebar/>
+                    <CategoryList/>
                 </GridItem>
                 <GridItem area={'main'} overflow={"hidden"}>
                     <ProductList/>

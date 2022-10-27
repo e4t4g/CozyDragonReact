@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     Button,
-    Input, Modal,
+    Input,
+    Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,

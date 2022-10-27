@@ -14,10 +14,11 @@ import {
 } from '@chakra-ui/react';
 import {MdFavorite} from 'react-icons/md';
 import {Link} from 'react-router-dom'
-import {BsBag, BsBagFill} from 'react-icons/bs';
+import {BsBagFill} from 'react-icons/bs';
 import {useCategory} from "../context/CategoryContext";
 import {useCart} from "../context/CartContext";
 import {formatCurrency} from "../utilities/formatCurrency";
+import { ICategory } from '../models/ICategory';
 
 const CartButton = () => {
     const {cartItems, getTotalCost} = useCart();
@@ -66,7 +67,7 @@ export const Header = () => {
               justifyContent='space-between'
               zIndex={100}
         >
-            <Link to='/all' onClick={() => onChangeCurrentCategory('all')}>
+            <Link to='/all' onClick={() => onChangeCurrentCategory({} as ICategory)}>
                 <Flex alignItems='center' color='gray.600' textTransform={"uppercase"} ml={4}>
                     <svg width="52" height="52"
                          xmlns="http://www.w3.org/2000/svg">
