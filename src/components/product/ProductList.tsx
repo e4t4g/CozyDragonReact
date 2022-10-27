@@ -80,7 +80,7 @@ const ProductList = () => {
                     </SimpleGrid>
                 </>
             }
-            <NewProductDrawer isOpen={isOpen} onOpen={onOpen} onClose={onClose}/>
+            <NewProductDrawer isOpen={isOpen} onClose={onClose}/>
         </Box>
     );
 };
