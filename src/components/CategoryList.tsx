@@ -7,15 +7,17 @@ import {ICategory} from '../models/ICategory';
 import {isEmpty} from '../utilities/isEmpty';
 import {DeleteIcon, EditIcon} from '@chakra-ui/icons';
 import ErrorMessage from './UI/ErrorMessage';
-import {AiOutlineReload} from "react-icons/ai";
+import {AiOutlineReload} from 'react-icons/ai';
 import RemoveCategoryModal from './modals/RemoveCategoryModal';
-import EditCategoryModal from "./modals/EditCategoryModal";
+import EditCategoryModal from './modals/EditCategoryModal';
 import {ToastError, ToastSuccess} from '../utilities/error-handling';
+import CreateCategoryModal from './modals/CreateCategory';
 
 export const CategoryList = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const editDisclosure = useDisclosure()
-    const removeDisclosure = useDisclosure()
+    const editDisclosure = useDisclosure();
+    const createDisclosure = useDisclosure();
+    const removeDisclosure = useDisclosure();
     const {currentCategory, categories, onChangeCurrentCategory, onChangeCategories} = useCategory();
     const [selectedCategory, setSelectedCategory] = useState({} as ICategory);
     const [error, setError] = useState('');
@@ -57,7 +59,7 @@ export const CategoryList = () => {
     const onEditCategory = async (category: ICategory) => {
         await axios.put(
             `https://api.escuelajs.co/api/v1/categories/${category.id}`,
-            {"name": category.name}
+            {'name': category.name}
         )
             .then(() => {
                 fetchCategories();
@@ -68,6 +70,26 @@ export const CategoryList = () => {
             })
             .finally(() => {
                 editDisclosure.onClose();
+            })
+    }
+
+    const onCreateCategory = async (category: ICategory) => {
+        await axios.post(
+            `https://api.escuelajs.co/api/v1/categories/`,
+            {
+                'name': category.name,
+                'image': category.image
+            }
+        )
+            .then(() => {
+                fetchCategories();
+                ToastSuccess('The category has been created successfully');
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                createDisclosure.onClose();
             })
     }
 
@@ -111,7 +133,10 @@ export const CategoryList = () => {
                 height='calc(100vh - 80px)'
                 borderRightColor='gray.200'
                 overflowY='auto'>
-                {isAdmin && <Button mx={2} mb={2}>Добавить категорию</Button>}
+                {isAdmin && <Button mx={2} mb={2} onClick={() => {
+                    setSelectedCategory({} as ICategory);
+                    createDisclosure.onOpen();
+                }}>Добавить категорию</Button>}
                 <NavItem
                     fontWeight={isEmpty(currentCategory) ? '800' : '400'}
                     onClick={() => onChangeCurrentCategory({} as ICategory)}
@@ -144,6 +169,13 @@ export const CategoryList = () => {
                                             setSelectedCategory(category);
                                             removeDisclosure.onOpen();
                                         }}/>}
+                        <CreateCategoryModal
+                            isOpen={createDisclosure.isOpen}
+                            onClose={createDisclosure.onClose}
+                            category={selectedCategory}
+                            handleSelectedCategory={(category) => setSelectedCategory(category)}
+                            onEditCategory={onCreateCategory}
+                        />
                         <EditCategoryModal
                             isOpen={editDisclosure.isOpen}
                             onClose={editDisclosure.onClose}
