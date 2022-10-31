@@ -97,9 +97,9 @@ export const EditProduct = () => {
             {!isLoading && !isEmpty(product) &&
                 <Flex gap={5} pt={20} minH='555px'>
                     <EditImage images={product?.images} updateImage={updateImage}/>
-                    <VStack spacing={4} flex={1} alignItems='start' justifyContent='center' alignSelf='start'>
+                    <VStack spacing={5} flex={1} alignItems='start' justifyContent='center' alignSelf='start'>
                         <EditCategory category={product.category} updateCategory={updateCategory}/>
-                        <Checkbox colorScheme='yellow' isChecked={isInStock} onChange={updateIsInStock}>
+                        <Checkbox iconSize='lg' colorScheme='yellow' isChecked={isInStock} onChange={updateIsInStock}>
                             Есть в наличии
                         </Checkbox>
                         <Divider/>
