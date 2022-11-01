@@ -1,4 +1,13 @@
-import {Box, Button, Flex, Heading, SimpleGrid, useDisclosure} from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Center,
+    Flex,
+    Heading,
+    SimpleGrid,
+    Text,
+    useDisclosure
+} from '@chakra-ui/react';
 import React, {useEffect, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";

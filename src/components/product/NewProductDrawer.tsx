@@ -61,7 +61,7 @@ const NewProductDrawer = ({isOpen, onClose, onAddNewProduct}: NewProductDrawerPr
             <DrawerOverlay backdropFilter='blur(2px)'/>
             <DrawerContent minWidth='500px'>
                 <DrawerCloseButton/>
-                <DrawerHeader borderBottomWidth='1px' backgroundColor='gray.100' boxShadow='md' minH='80px' d='flex'
+                <DrawerHeader borderBottomWidth='1px' backgroundColor='gray.100' boxShadow='md' minH='80px' display='flex'
                               alignItems='center'>
                     Новый товар
                 </DrawerHeader>
