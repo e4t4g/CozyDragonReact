@@ -77,6 +77,11 @@ const ProductList = () => {
                                     <ProductItem product={product} key={product.id}/>
                                 ))
                             )}
+                        {!isLoading && products.length === 0 && (
+                            <Center h='50vh'>
+                                <Text color='gray'>В данной категории нет товаров</Text>
+                            </Center>
+                        )}
                     </SimpleGrid>
                 </>
             }

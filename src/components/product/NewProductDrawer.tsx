@@ -26,8 +26,8 @@ interface Values {
     title: string;
     price: string;
     description: string;
+    categoryId: number;
     image: string;
-    category: string;
 }
 
 interface NewProductDrawerProps {
@@ -56,13 +56,19 @@ const NewProductDrawer = ({isOpen, onClose}: NewProductDrawerProps) => {
     });
 
     const onAddNewProduct = async (values: Values) => {
-        const selectedCategory = categories.find(i => i.name === values.category);
-        const result = {...values, category: selectedCategory};
+        const result = {
+            "title": values.title,
+            "price": values.price,
+            "description": values.description,
+            "categoryId": values.categoryId,
+            "images": [values.image]
+        };
+
         setIsLoading(true);
-        await axios.put('https://fakestoreapi.com/products', result)
+        await axios.post('https://api.escuelajs.co/api/v1/products/', result)
             .then(() => {
                 ToastSuccess('The product was successfully added')
-                setTimeout(() => onClose(), 2000)
+                onClose();
             })
             .catch(error => {
                 ToastError(error.message);
@@ -92,8 +98,8 @@ const NewProductDrawer = ({isOpen, onClose}: NewProductDrawerProps) => {
                         title: '',
                         price: '',
                         description: '',
+                        categoryId: currentCategory.id,
                         image: '',
-                        category: currentCategory.name,
                     }}
                     validationSchema={ValidationSchema}
                     onSubmit={(
@@ -108,15 +114,15 @@ const NewProductDrawer = ({isOpen, onClose}: NewProductDrawerProps) => {
                         <DrawerBody style={{height: '100%'}}>
                             <Stack spacing={6} py={4}>
                                 <FormControl>
-                                    <FormLabel htmlFor='category' fontSize='sm' color='gray.400'>Категория
+                                    <FormLabel htmlFor='categoryId' fontSize='sm' color='gray.400'>Категория
                                         товара</FormLabel>
-                                    <Field name="category">
+                                    <Field name="categoryId">
                                         {({field, meta}: any) => (
                                             <>
-                                                <Select id='category' name='category'
+                                                <Select id='categoryId' name='categoryId'
                                                         {...field}>
                                                     {categories.map(category => (
-                                                        <option value={category.name}
+                                                        <option value={category.id}
                                                                 key={category.id}>{category.name}</option>
                                                     ))}
                                                 </Select>

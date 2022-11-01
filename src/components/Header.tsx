@@ -55,7 +55,7 @@ export const Header = () => {
     const isAdmin = false;
 
     return (
-        <Flex bg='gray.100'
+        <Flex bg='gray.200'
               position='sticky'
               top='0'
               left='0'
