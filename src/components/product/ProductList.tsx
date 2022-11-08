@@ -1,4 +1,4 @@
-import {Box, Button, Flex, Heading, SimpleGrid, useDisclosure} from '@chakra-ui/react';
+import {Box, Button, Center, Flex, Heading, SimpleGrid, Text, useDisclosure} from '@chakra-ui/react';
 import React, {useEffect, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";
@@ -7,8 +7,9 @@ import {IProduct} from '../../models/IProduct';
 import ErrorMessage from "../UI/ErrorMessage";
 import {useCategory} from "../../context/CategoryContext";
 import {GrAdd} from "react-icons/gr";
-import NewProductDrawer from './NewProductDrawer';
+import NewProductDrawer, {Values} from './NewProductDrawer';
 import {isEmpty} from "../../utilities/isEmpty";
+import {ToastError, ToastSuccess} from '../../utilities/error-handling';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -16,7 +17,7 @@ const ProductList = () => {
     const [error, setError] = useState('');
     const [offset, setOffset] = useState(0);
     const [limit, setLimit] = useState(20);
-    const {currentCategory} = useCategory();
+    const {currentCategory, onChangeCurrentCategory, categories} = useCategory();
     const {isOpen, onOpen, onClose} = useDisclosure()
 
     const isAdmin = false;
@@ -37,6 +38,37 @@ const ProductList = () => {
     useEffect(() => {
         fetchProducts();
     }, [currentCategory]);
+
+    const onChangeCategory = (id: number) => {
+        const selectedCategory = categories.find(c => c.id == id);
+        if (selectedCategory) {
+            onChangeCurrentCategory(selectedCategory)
+        }
+    }
+
+    const onAddNewProduct = async (values: Values) => {
+        const result = {
+            "title": values.title,
+            "price": values.price,
+            "description": values.description,
+            "categoryId": values.categoryId,
+            "images": [values.image]
+        };
+
+        await axios.post('https://api.escuelajs.co/api/v1/products/', result)
+            .then(() => {
+                if (currentCategory.id !== values.categoryId) {
+                    onChangeCategory(values.categoryId);
+                }
+                ToastSuccess('The product was successfully added');
+                onClose();
+            })
+            .catch(error => {
+                ToastError(error.message);
+            }).finally(() => {
+                fetchProducts();
+            })
+    }
 
     const SkeletonList = () => (
         <>
@@ -62,9 +94,17 @@ const ProductList = () => {
                     <Flex justifyContent='space-between' gap={5}>
                         <Heading mb={5}>{currentCategory?.name?.toUpperCase() ?? 'All'.toUpperCase()}</Heading>
                         {isAdmin &&
-                            <Button rightIcon={<GrAdd/>} px={6} minW='fit-content' colorScheme='yellow'
-                                    fontWeight='normal'
-                                    onClick={onOpen}>
+                            <Button
+                                position='fixed'
+                                right='50px'
+                                boxShadow='md'
+                                zIndex='10'
+                                rightIcon={<GrAdd/>}
+                                px={6}
+                                minW='fit-content'
+                                colorScheme='yellow'
+                                fontWeight='normal'
+                                onClick={onOpen}>
                                 Добавить новый товар
                             </Button>
                         }
@@ -85,7 +125,7 @@ const ProductList = () => {
                     </SimpleGrid>
                 </>
             }
-            <NewProductDrawer isOpen={isOpen} onClose={onClose}/>
+            <NewProductDrawer isOpen={isOpen} onClose={onClose} onAddNewProduct={onAddNewProduct}/>
         </Box>
     );
 };

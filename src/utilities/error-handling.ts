@@ -1,7 +1,7 @@
 import {createStandaloneToast} from "@chakra-ui/react";
 
 export const ToastSuccess = (message: string) => {
-    const toast = createStandaloneToast();
+    const { toast } = createStandaloneToast();
     return toast({
         title: 'Success',
         description: message,
@@ -12,7 +12,7 @@ export const ToastSuccess = (message: string) => {
 };
 
 export const ToastError = (error: string) => {
-    const toast = createStandaloneToast();
+    const { toast } = createStandaloneToast();
     return toast({
         title: 'An error occurred',
         description: error,

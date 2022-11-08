@@ -30,6 +30,8 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
             maxW='300px'
             overflow='hidden'
             bg='gray.100'
+            border='1px solid'
+            borderColor='gray.100'
             zIndex={1}
             rounded='2xl'
             flexDirection='column'
@@ -39,7 +41,7 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
             position='relative'
         >
             {!isAdmin && <FavouriteSwitcher isFav={isFav}/>}
-            <Box p={4}>
+            <Box py={4}>
                 <Link to={isAdmin ? `/edit/${id}/${title}` : `/${product.category?.name?.toLowerCase()}/${product.id}/${product.title}`}>
                     <Flex height='250px' width='100%' justifyContent='center'>
                         <Image
@@ -50,7 +52,7 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
                             fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>
-                    <Stack height='130px' alignItems='start' justifyContent='center'>
+                    <Stack height='130px' alignItems='start' justifyContent='center' px={4}>
                         <Text fontWeight={700} fontSize={'xl'}>
                             {formatCurrency(Number(price))}
                         </Text>
