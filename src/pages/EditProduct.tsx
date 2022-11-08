@@ -1,14 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Button,
-    Checkbox,
-    Divider,
-    Flex,
-    Skeleton,
-    SkeletonText,
-    VStack
-} from "@chakra-ui/react";
-import {useParams} from 'react-router-dom';
+import {Button, Checkbox, Divider, Flex, Skeleton, SkeletonText, VStack} from "@chakra-ui/react";
+import {useNavigate, useParams} from 'react-router-dom';
 import axios from "axios";
 import {IProduct} from "../models/IProduct";
 import MainBlockLayout from "../components/UI/MainBlockLayout";
@@ -22,7 +14,8 @@ import EditCategory from "../components/edit-product/EditCategory";
 import ErrorMessage from "../components/UI/ErrorMessage";
 import {isEmpty} from "../utilities/isEmpty";
 import {ICategory} from "../models/ICategory";
-import { MdDelete } from 'react-icons/md';
+import {MdDelete} from 'react-icons/md';
+import {ToastError, ToastSuccess} from "../utilities/error-handling";
 
 export const EditProduct = () => {
     const {productId} = useParams();
@@ -30,6 +23,7 @@ export const EditProduct = () => {
     const [product, setProduct] = useState({} as IProduct);
     const [error, setError] = useState('');
     const {categories, currentCategory} = useCategory();
+    const navigate = useNavigate();
 
     const [isInStock, setIsInStock] = useState(false);
 
@@ -74,13 +68,30 @@ export const EditProduct = () => {
     }
 
     const onSaveChanges = async () => {
-        await axios.put(`https://fakestoreapi.com/products/${productId}`, product)
-            .then((res) => console.log(res));
+        await axios.put(`https://api.escuelajs.co/api/v1/products/${productId}`,
+            {
+                "title": product.title,
+                "price": product.price
+            })
+            .then(() => {
+                    ToastSuccess('The product has been updated successfully');
+                }
+            )
+            .catch((error) => {
+                ToastError(error.message);
+            });
     }
 
     const onRemoveProduct = async () => {
-        await axios.delete(`https://fakestoreapi.com/products/${productId}`)
-            .then((res) => console.log(res));
+        await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`)
+            .then(() => {
+                    ToastSuccess('The product has been removed successfully');
+                    navigate(`/${currentCategory?.name?.toLowerCase() ?? 'all'}`)
+                }
+            )
+            .catch((error) => {
+                ToastError(error.message);
+            })
     }
 
     return (
@@ -125,7 +136,6 @@ export const EditProduct = () => {
                                 px={6}
                                 py={6}
                                 onClick={() => onRemoveProduct()}
-
                             >
                                 Удалить товар
                             </Button>

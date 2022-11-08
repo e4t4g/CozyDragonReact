@@ -1,13 +1,4 @@
-import {
-    Box,
-    Button,
-    Center,
-    Flex,
-    Heading,
-    SimpleGrid,
-    Text,
-    useDisclosure
-} from '@chakra-ui/react';
+import {Box, Button, Center, Flex, Heading, SimpleGrid, Text, useDisclosure} from '@chakra-ui/react';
 import React, {useEffect, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";
@@ -103,9 +94,17 @@ const ProductList = () => {
                     <Flex justifyContent='space-between' gap={5}>
                         <Heading mb={5}>{currentCategory?.name?.toUpperCase() ?? 'All'.toUpperCase()}</Heading>
                         {isAdmin &&
-                            <Button rightIcon={<GrAdd/>} px={6} minW='fit-content' colorScheme='yellow'
-                                    fontWeight='normal'
-                                    onClick={onOpen}>
+                            <Button
+                                position='fixed'
+                                right='50px'
+                                boxShadow='md'
+                                zIndex='10'
+                                rightIcon={<GrAdd/>}
+                                px={6}
+                                minW='fit-content'
+                                colorScheme='yellow'
+                                fontWeight='normal'
+                                onClick={onOpen}>
                                 Добавить новый товар
                             </Button>
                         }
