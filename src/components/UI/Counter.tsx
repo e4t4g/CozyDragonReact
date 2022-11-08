@@ -17,9 +17,8 @@ const Counter = ({product, quantity, buttonColor = 'gray.50'}: CounterProps) => 
             {quantity === 0 ? (
                 <Button backgroundColor={buttonColor}
                         border='1px solid'
-                        borderColor={buttonColor ?? 'gray.200'}
-                        boxShadow='sm'
-                        rounded='2xl'
+                        borderColor='gray.200'
+                        rounded='xl'
                         width='100%'
                         px={8}
                         py={6}
@@ -30,19 +29,18 @@ const Counter = ({product, quantity, buttonColor = 'gray.50'}: CounterProps) => 
                     В корзину
                 </Button>
             ) : (
-                <HStack rounded='2xl'
+                <HStack rounded='xl'
                         backgroundColor='gray.50'
                         border='1px solid'
                         borderColor='gray.200'
                         justifyContent='space-around'
                         cursor='default'
-                        boxShadow='sm'
                         transition='all .3s ease'
                         _hover={{boxShadow: 'md'}}>
                     <IconButton aria-label='Уменьшить количество'
                                 icon={<FaMinus/>}
                                 variant='ghost'
-                                borderRadius='2xl'
+                                borderRadius='xl'
                                 py={6}
                                 _focus={{boxShadow: 'none'}}
                                 onClick={() => decreaseCartQuantity(product)}
@@ -53,7 +51,7 @@ const Counter = ({product, quantity, buttonColor = 'gray.50'}: CounterProps) => 
                     <IconButton aria-label='Увеличить количество'
                                 icon={<FaPlus/>}
                                 variant='ghost'
-                                borderRadius='2xl'
+                                borderRadius='xl'
                                 py={6}
                                 _focus={{boxShadow: 'none'}}
                                 onClick={() => increaseCartQuantity(product)}
