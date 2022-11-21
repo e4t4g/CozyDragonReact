@@ -1,4 +1,4 @@
-import {Box, Button, Center, Flex, Heading, SimpleGrid, Text, useDisclosure} from '@chakra-ui/react';
+import {Box, Button, Center, Flex, Heading, SimpleGrid, Spinner, Text, useDisclosure} from '@chakra-ui/react';
 import React, {useEffect, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";
@@ -13,31 +13,65 @@ import {ToastError, ToastSuccess} from '../../utilities/error-handling';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [offset, setOffset] = useState(0);
-    const [limit, setLimit] = useState(20);
+    const [limit] = useState(8);
     const {currentCategory, onChangeCurrentCategory, categories} = useCategory();
     const {isOpen, onOpen, onClose} = useDisclosure()
+    const [isLoading, setIsLoading] = useState(true);
+    const [contentLength, setContentLength] = useState(0);
 
     const isAdmin = false;
 
     const fetchProducts = async () => {
-        setIsLoading(true);
         setError('');
         await axios.get(
             isEmpty(currentCategory)
                 ? `https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=${limit}`
                 : `https://api.escuelajs.co/api/v1/categories/${currentCategory.id}/products?offset=${offset}&limit=${limit}`
         )
-            .then(response => setProducts(response.data))
+            .then(response => {
+                setProducts([...products, ...response.data]);
+                setOffset(prevState => prevState + limit);
+                setContentLength(+response.headers['content-length']);
+            })
             .catch(e => setError(e.message))
-            .then(() => setIsLoading(false));
+            .finally(() => {
+                setIsLoading(false)
+            });
     };
 
     useEffect(() => {
-        fetchProducts();
+        if (isLoading) {
+            fetchProducts();
+        }
+    }, [isLoading]);
+
+    useEffect(() => {
+        setProducts([]);
+        setOffset(0);
+        setIsLoading(true);
+        window.scroll({
+            top: 0,
+            left: 0,
+        });
     }, [currentCategory]);
+
+    useEffect(() => {
+        document.addEventListener('scroll', scrollHandler)
+        return function () {
+            document.removeEventListener('scroll', scrollHandler)
+        }
+    })
+
+    const scrollHandler = (e: any) => {
+        const scrollHeight = e.target.documentElement.scrollHeight;
+        const scrollTop = e.target.documentElement.scrollTop;
+        const innerHeight = window.innerHeight;
+        if (scrollHeight - (scrollTop + innerHeight) < 200 && contentLength > 2) {
+            setIsLoading(true)
+        }
+    }
 
     const onChangeCategory = (id: number) => {
         const selectedCategory = categories.find(c => c.id == id);
@@ -72,7 +106,7 @@ const ProductList = () => {
 
     const SkeletonList = () => (
         <>
-            {Array(4)
+            {Array(8)
                 .fill(null)
                 .map((_, index) => <ProductSkeleton key={index}/>)}
         </>
@@ -110,19 +144,29 @@ const ProductList = () => {
                         }
                     </Flex>
                     <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
-                        {isLoading
+                        {products.length === 0
                             ? <SkeletonList/>
                             : (
                                 products.map(product => (
                                     <ProductItem product={product} key={product.id}/>
                                 ))
-                            )}
+                            )
+                        }
                         {!isLoading && products.length === 0 && (
                             <Center h='50vh'>
                                 <Text color='gray'>В данной категории нет товаров</Text>
                             </Center>
                         )}
                     </SimpleGrid>
+                    {products.length > 0 && isLoading && (
+                        <Center mt={10}>
+                            <Spinner thickness='4px'
+                                     speed='0.65s'
+                                     emptyColor='gray.200'
+                                     color='yellow.500'
+                                     size='xl'/>
+                        </Center>
+                    )}
                 </>
             }
             <NewProductDrawer isOpen={isOpen} onClose={onClose} onAddNewProduct={onAddNewProduct}/>
