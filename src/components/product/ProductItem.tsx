@@ -1,10 +1,4 @@
-import {
-    Box,
-    Text,
-    Stack,
-    Image,
-    Flex
-} from '@chakra-ui/react';
+import {Box, Flex, Image, Stack, Text} from '@chakra-ui/react';
 import {FC} from "react";
 import {Link} from 'react-router-dom';
 import {useCart} from "../../context/CartContext";
@@ -42,7 +36,8 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
         >
             {!isAdmin && <FavouriteSwitcher isFav={isFav}/>}
             <Box py={4}>
-                <Link to={isAdmin ? `/edit/${id}/${title}` : `/${product.category?.name?.toLowerCase()}/${product.id}/${product.title}`}>
+                <Link
+                    to={isAdmin ? `/edit/${id}/${title}` : `/${product.category?.name?.toLowerCase()}/${product.id}/${product.title}`}>
                     <Flex height='250px' width='100%' justifyContent='center'>
                         <Image
                             maxH='100%'
@@ -61,7 +56,9 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
                         </Text>
                     </Stack>
                 </Link>
-                {!isAdmin && <Counter product={product} quantity={quantity}/>}
+                {!isAdmin && <Box px={4}>
+                    <Counter product={product} quantity={quantity}/>
+                </Box>}
             </Box>
         </Flex>
     );

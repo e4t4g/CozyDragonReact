@@ -55,7 +55,7 @@ export const Header = () => {
     const isAdmin = false;
 
     return (
-        <Flex bg='gray.200'
+        <Flex bg='gray.100'
               position='sticky'
               top='0'
               left='0'
@@ -68,12 +68,14 @@ export const Header = () => {
               zIndex={100}
         >
             <Link to='/all' onClick={() => onChangeCurrentCategory({} as ICategory)}>
-                <Flex alignItems='center' color='gray.600' textTransform={"uppercase"} ml={4}>
+                <Flex alignItems='center' color='gray.500' textTransform={"uppercase"} ml={4}>
                     <svg width="52" height="52"
                          xmlns="http://www.w3.org/2000/svg">
                         <image href="/imgs/logo.svg" height="52" width="52"/>
                     </svg>
-                    <Text ml={2} fontStyle='italic' as='h1' fontSize='xx-large'>GB Store</Text>
+                    <Text ml={2} as='h1' fontSize='4xl' fontWeight='thin'>
+                        GB Store
+                    </Text>
                 </Flex>
             </Link>
             <Flex alignItems={'center'}>

@@ -145,12 +145,12 @@ export const CategoryList = () => {
                 </NavItem>
                 {categories?.map((category) => (
                     <Flex
+                        key={category.id}
                         w='100%'
                         alignItems='center'
                         color='gray.400'
                         _hover={{backgroundColor: 'gray.400', color: 'gray.600'}}>
                         <NavItem
-                            key={category.id}
                             fontWeight={currentCategory.name === category.name ? '800' : '400'}
                             onClick={() => onChangeCurrentCategory(category)}
                         >
