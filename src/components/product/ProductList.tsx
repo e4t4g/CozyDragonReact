@@ -10,30 +10,31 @@ import {GrAdd} from "react-icons/gr";
 import NewProductDrawer, {Values} from './NewProductDrawer';
 import {isEmpty} from "../../utilities/isEmpty";
 import {ToastError, ToastSuccess} from '../../utilities/error-handling';
+import {rootURL} from "../../constants/URLs";
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [error, setError] = useState('');
-    const [offset, setOffset] = useState(0);
-    const [limit] = useState(8);
+    // const [offset, setOffset] = useState(0);
+    // const [limit] = useState(8);
     const {currentCategory, onChangeCurrentCategory, categories} = useCategory();
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [isLoading, setIsLoading] = useState(true);
-    const [contentLength, setContentLength] = useState(0);
+    // const [contentLength, setContentLength] = useState(0);
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     const fetchProducts = async () => {
         setError('');
         await axios.get(
             isEmpty(currentCategory)
-                ? `https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=${limit}`
-                : `https://api.escuelajs.co/api/v1/categories/${currentCategory.id}/products?offset=${offset}&limit=${limit}`
+                ? `${rootURL}/items`
+                : `${rootURL}/items/categories/${currentCategory.name}`
         )
             .then(response => {
                 setProducts([...products, ...response.data]);
-                setOffset(prevState => prevState + limit);
-                setContentLength(+response.headers['content-length']);
+                // setOffset(prevState => prevState + limit);
+                // setContentLength(+response.headers['content-length']);
             })
             .catch(e => setError(e.message))
             .finally(() => {
@@ -47,31 +48,31 @@ const ProductList = () => {
         }
     }, [isLoading]);
 
-    useEffect(() => {
-        setProducts([]);
-        setOffset(0);
-        setIsLoading(true);
-        window.scroll({
-            top: 0,
-            left: 0,
-        });
-    }, [currentCategory]);
-
-    useEffect(() => {
-        document.addEventListener('scroll', scrollHandler)
-        return function () {
-            document.removeEventListener('scroll', scrollHandler)
-        }
-    })
-
-    const scrollHandler = (e: any) => {
-        const scrollHeight = e.target.documentElement.scrollHeight;
-        const scrollTop = e.target.documentElement.scrollTop;
-        const innerHeight = window.innerHeight;
-        if (scrollHeight - (scrollTop + innerHeight) < 200 && contentLength > 2) {
-            setIsLoading(true)
-        }
-    }
+    // useEffect(() => {
+    //     setProducts([]);
+    //     setOffset(0);
+    //     setIsLoading(true);
+    //     window.scroll({
+    //         top: 0,
+    //         left: 0,
+    //     });
+    // }, [currentCategory]);
+    //
+    // useEffect(() => {
+    //     document.addEventListener('scroll', scrollHandler)
+    //     return function () {
+    //         document.removeEventListener('scroll', scrollHandler)
+    //     }
+    // })
+    //
+    // const scrollHandler = (e: any) => {
+    //     const scrollHeight = e.target.documentElement.scrollHeight;
+    //     const scrollTop = e.target.documentElement.scrollTop;
+    //     const innerHeight = window.innerHeight;
+    //     if (scrollHeight - (scrollTop + innerHeight) < 200 && contentLength > 2) {
+    //         setIsLoading(true)
+    //     }
+    // }
 
     const onChangeCategory = (id: number) => {
         const selectedCategory = categories.find(c => c.id == id);
@@ -83,13 +84,13 @@ const ProductList = () => {
     const onAddNewProduct = async (values: Values) => {
         const result = {
             "title": values.title,
-            "price": values.price,
             "description": values.description,
-            "categoryId": values.categoryId,
-            "images": [values.image]
+            "price": values.price,
+            "category": values.categoryId,
+            "image": values.image
         };
 
-        await axios.post('https://api.escuelajs.co/api/v1/products/', result)
+        await axios.post(`${rootURL}/items`, result)
             .then(() => {
                 if (currentCategory.id !== values.categoryId) {
                     onChangeCategory(values.categoryId);
@@ -122,53 +123,59 @@ const ProductList = () => {
             bg='gray.50'
             overflowY='auto'
         >
-            {error
-                ? <ErrorMessage message={error}/>
-                : <>
-                    <Flex justifyContent='space-between' gap={5}>
-                        <Heading mb={5}>{currentCategory?.name?.toUpperCase() ?? 'All'.toUpperCase()}</Heading>
-                        {isAdmin &&
-                            <Button
-                                position='fixed'
-                                right='50px'
-                                boxShadow='md'
-                                zIndex='10'
-                                rightIcon={<GrAdd/>}
-                                px={6}
-                                minW='fit-content'
-                                colorScheme='yellow'
-                                fontWeight='normal'
-                                onClick={onOpen}>
-                                Добавить новый товар
-                            </Button>
-                        }
-                    </Flex>
-                    <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
-                        {products.length === 0
-                            ? <SkeletonList/>
-                            : (
-                                products.map(product => (
-                                    <ProductItem product={product} key={product.id}/>
-                                ))
-                            )
-                        }
-                        {!isLoading && products.length === 0 && (
-                            <Center h='50vh'>
-                                <Text color='gray'>В данной категории нет товаров</Text>
-                            </Center>
-                        )}
-                    </SimpleGrid>
-                    {products.length > 0 && isLoading && (
-                        <Center mt={10}>
-                            <Spinner thickness='4px'
-                                     speed='0.65s'
-                                     emptyColor='gray.200'
-                                     color='yellow.500'
-                                     size='xl'/>
+            <>
+                <Flex justifyContent='space-between' gap={5}>
+                    <Heading mb={5}>{currentCategory?.name?.toUpperCase() ?? 'All'.toUpperCase()}</Heading>
+                    {isAdmin &&
+                        <Button
+                            position='fixed'
+                            right='50px'
+                            boxShadow='md'
+                            zIndex='10'
+                            rightIcon={<GrAdd/>}
+                            px={6}
+                            minW='fit-content'
+                            colorScheme='yellow'
+                            fontWeight='normal'
+                            onClick={onOpen}>
+                            Добавить новый товар
+                        </Button>
+                    }
+                </Flex>
+                {error && <ErrorMessage message={error}/>}
+                <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
+                    {isLoading && products.length === 0
+                        ? <SkeletonList/>
+                        : (
+                            products.map(product => (
+                                <ProductItem product={product} key={product.id}/>
+                            ))
+                        )
+                    }
+                    {!isLoading && !error && products.length === 0 && (
+                        <Center h='50vh'>
+
+                            <Text color='gray'>
+                                {isEmpty(currentCategory)
+                                    ? 'Список товаров пуст'
+                                    : 'В данной категории нет товаров'
+                                }
+
+                            </Text>
                         </Center>
                     )}
-                </>
-            }
+                </SimpleGrid>
+                {products.length > 0 && isLoading && (
+                    <Center mt={10}>
+                        <Spinner thickness='4px'
+                                 speed='0.65s'
+                                 emptyColor='gray.200'
+                                 color='yellow.500'
+                                 size='xl'/>
+                    </Center>
+                )}
+            </>
+
             <NewProductDrawer isOpen={isOpen} onClose={onClose} onAddNewProduct={onAddNewProduct}/>
         </Box>
     );

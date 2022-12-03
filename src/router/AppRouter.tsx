@@ -4,7 +4,7 @@ import {adminRoutes, routes} from "./index";
 
 const AppRouter = () => {
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <Routes>

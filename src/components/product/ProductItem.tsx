@@ -12,12 +12,12 @@ interface ProductItemProps {
 }
 
 export const ProductItem: FC<ProductItemProps> = ({product}) => {
-    const {id, images, price, title} = product;
+    const {id, image, price, title} = product;
     const {getItemQuantity} = useCart();
     const quantity = getItemQuantity(id);
 
     const isFav = false;
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <Flex
@@ -43,7 +43,7 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
                             maxH='100%'
                             maxW='100%'
                             objectFit={'contain'}
-                            src={images[0]}
+                            src={image}
                             fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>

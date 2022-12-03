@@ -9,6 +9,7 @@ import {useCart} from "../context/CartContext";
 import {FavouriteSwitcher} from "../components/UI/FavouriteSwitcher";
 import MainBlockLayout from "../components/UI/MainBlockLayout";
 import {isEmpty} from "../utilities/isEmpty";
+import {rootURL} from "../constants/URLs";
 
 export const Product = () => {
     const {productId} = useParams();
@@ -20,11 +21,9 @@ export const Product = () => {
 
     const getProduct = async () => {
         setIsLoading(true);
-        console.log('productId', productId);
         await axios
-            .get(`https://api.escuelajs.co/api/v1/products/${productId}`)
+            .get(`${rootURL}/items/${productId}`)
             .then(response => {
-                console.log('response.data', response.data)
                 setProduct(response.data);
             }).catch(error => {
                 console.log(error);
@@ -66,7 +65,7 @@ export const Product = () => {
                             minH='500px'
                             minW='500px'
                             objectFit={'contain'}
-                            src={product.images[0]}
+                            src={product.image}
                             fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>

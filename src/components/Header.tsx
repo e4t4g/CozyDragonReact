@@ -52,7 +52,7 @@ const Links = [
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
 
-    const isAdmin = false;
+    const isAdmin = true;
 
     return (
         <Flex bg='gray.100'

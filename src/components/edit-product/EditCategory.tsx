@@ -3,6 +3,7 @@ import axios from "axios";
 import {useCategory} from "../../context/CategoryContext";
 import {Flex, Select, Text} from "@chakra-ui/react";
 import {ICategory} from "../../models/ICategory";
+import { rootURL } from '../../constants/URLs';
 
 interface EditCategoryProps {
     category: ICategory,
@@ -15,7 +16,7 @@ const EditCategory = ({category, updateCategory}: EditCategoryProps) => {
 
     const fetchCategories = async () => {
         setIsLoading(true)
-        await axios.get('https://api.escuelajs.co/api/v1/categories')
+        await axios.get(`${rootURL}/categories`)
             .then(response => {
                 let result = response.data;
                 onChangeCategories(result);
