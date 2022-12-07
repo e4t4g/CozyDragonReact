@@ -44,7 +44,7 @@ export const CategoryList = () => {
     }, []);
 
     const onRemoveCategory = async (id: number) => {
-        await axios.delete(`${rootURL}/items/categories/${id}`)
+        await axios.delete(`${rootURL}/categories/${id}`)
             .then(() => {
                 fetchCategories();
                 ToastSuccess('The category has been removed successfully');
@@ -59,7 +59,7 @@ export const CategoryList = () => {
 
     const onEditCategory = async (category: ICategory) => {
         await axios.put(
-            `${rootURL}/items/categories/${category.id}`,
+            `${rootURL}/categories/${category.id}`,
             {'name': category.name}
         )
             .then(() => {
@@ -76,7 +76,7 @@ export const CategoryList = () => {
 
     const onCreateCategory = async (category: ICategory) => {
         await axios.post(
-            `${rootURL}/items/categories/`,
+            `${rootURL}/categories/`,
             {
                 'name': category.name
             }
