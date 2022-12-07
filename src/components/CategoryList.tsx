@@ -186,29 +186,29 @@ export const CategoryList = () => {
                                             setSelectedCategory(category);
                                             removeDisclosure.onOpen();
                                         }}/>}
-                        <CreateCategoryModal
-                            isOpen={createDisclosure.isOpen}
-                            onClose={createDisclosure.onClose}
-                            category={selectedCategory}
-                            handleSelectedCategory={(category) => setSelectedCategory(category)}
-                            onEditCategory={onCreateCategory}
-                        />
-                        <EditCategoryModal
-                            isOpen={editDisclosure.isOpen}
-                            onClose={editDisclosure.onClose}
-                            category={selectedCategory}
-                            handleSelectedCategory={(e) => setSelectedCategory({...selectedCategory, name: e})}
-                            onEditCategory={onEditCategory}
-                        />
-                        <RemoveCategoryModal
-                            isOpen={removeDisclosure.isOpen}
-                            onClose={removeDisclosure.onClose}
-                            category={selectedCategory}
-                            onRemoveCategory={onRemoveCategory}
-                        />
                     </Flex>
                 ))}
             </Box>}
+            <CreateCategoryModal
+                isOpen={createDisclosure.isOpen}
+                onClose={createDisclosure.onClose}
+                category={selectedCategory ?? {} as ICategory}
+                handleSelectedCategory={(category) => setSelectedCategory(category)}
+                onEditCategory={onCreateCategory}
+            />
+            <EditCategoryModal
+                isOpen={editDisclosure.isOpen}
+                onClose={editDisclosure.onClose}
+                category={selectedCategory}
+                handleSelectedCategory={(e) => setSelectedCategory({...selectedCategory, name: e})}
+                onEditCategory={onEditCategory}
+            />
+            <RemoveCategoryModal
+                isOpen={removeDisclosure.isOpen}
+                onClose={removeDisclosure.onClose}
+                category={selectedCategory}
+                onRemoveCategory={onRemoveCategory}
+            />
         </>
     );
 };

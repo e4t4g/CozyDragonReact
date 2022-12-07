@@ -23,7 +23,7 @@ interface EditCategoryModalProps {
 }
 
 const CreateCategoryModal = ({
-                                 category,
+                                 category = {} as ICategory,
                                  handleSelectedCategory,
                                  isOpen,
                                  onClose,
