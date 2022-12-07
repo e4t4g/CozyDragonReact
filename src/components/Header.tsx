@@ -71,10 +71,10 @@ export const Header = () => {
                 <Flex alignItems='center' color='gray.500' textTransform={"uppercase"} ml={4}>
                     <svg width="52" height="52"
                          xmlns="http://www.w3.org/2000/svg">
-                        <image href="/imgs/logo.svg" height="52" width="52"/>
+                        <image href="/imgs/logo.png" height="52" width="52"/>
                     </svg>
-                    <Text ml={2} as='h1' fontSize='4xl' fontWeight='thin'>
-                        GB Store
+                    <Text ml={2} as='h1' fontSize='3xl' fontWeight='thin' textTransform='lowercase'>
+                        Cozy Dragon
                     </Text>
                 </Flex>
             </Link>
