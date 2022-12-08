@@ -1,16 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-    Flex,
     Avatar,
-    HStack,
     Button,
+    Flex,
+    HStack,
+    IconButton,
     Menu,
     MenuButton,
-    MenuList,
-    MenuItem,
     MenuDivider,
+    MenuItem,
+    MenuList,
     Text,
-    IconButton,
+    useDisclosure,
 } from '@chakra-ui/react';
 import {MdFavorite} from 'react-icons/md';
 import {Link} from 'react-router-dom'
@@ -18,7 +19,10 @@ import {BsBagFill} from 'react-icons/bs';
 import {useCategory} from "../context/CategoryContext";
 import {useCart} from "../context/CartContext";
 import {formatCurrency} from "../utilities/formatCurrency";
-import { ICategory } from '../models/ICategory';
+import {ICategory} from '../models/ICategory';
+import Auth from './modals/Auth';
+import axios from "axios";
+import {ToastError, ToastSuccess} from "../utilities/error-handling";
 
 const CartButton = () => {
     const {cartItems, getTotalCost} = useCart();
@@ -52,7 +56,27 @@ const Links = [
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
 
+    const [isAuth, setIsAuth] = useState(false);
+    const authDisclosure = useDisclosure();
+
     const isAdmin = false;
+
+    const googleSignInHandler = async () => {
+        await axios.get(
+            `/user/login/google`
+        )
+            .then(({data}) => {
+                console.log(data);
+                ToastSuccess('Вы успешно авторизовались');
+                setIsAuth(true);
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                authDisclosure.onClose();
+            })
+    }
 
     return (
         <Flex bg='gray.100'
@@ -105,12 +129,18 @@ export const Header = () => {
                         />
                     </MenuButton>
                     <MenuList>
-                        {!isAdmin && <MenuItem>Мои заказы</MenuItem>}
-                        <MenuDivider/>
-                        <MenuItem>Выйти</MenuItem>
+                        {!isAuth && <MenuItem onClick={authDisclosure.onOpen}>Sign in</MenuItem>}
+
+                        {!isAdmin && isAuth && <MenuItem>Мои заказы</MenuItem>}
+                        {isAuth && <MenuDivider/>}
+                        {isAuth && <MenuItem>Выйти</MenuItem>}
                     </MenuList>
                 </Menu>
             </Flex>
+
+            <Auth isOpen={authDisclosure.isOpen}
+                  onClose={authDisclosure.onClose}
+                  googleSignInHandler={googleSignInHandler}/>
         </Flex>
     );
 }
