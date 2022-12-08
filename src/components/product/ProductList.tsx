@@ -1,8 +1,7 @@
-import {Box, Button, Center, Flex, Heading, SimpleGrid, Spinner, Text, useDisclosure} from '@chakra-ui/react';
-import React, {useEffect, useState} from 'react';
+import {Box, Button, Center, Flex, Heading, SimpleGrid, Text, useDisclosure} from '@chakra-ui/react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {ProductItem} from "./ProductItem";
 import axios from "axios";
-import ProductSkeleton from "../UI/ProductSkeleton";
 import {IProduct} from '../../models/IProduct';
 import ErrorMessage from "../UI/ErrorMessage";
 import {useCategory} from "../../context/CategoryContext";
@@ -10,6 +9,8 @@ import {GrAdd} from "react-icons/gr";
 import NewProductDrawer, {Values} from './NewProductDrawer';
 import {isEmpty} from "../../utilities/isEmpty";
 import {ToastError, ToastSuccess} from '../../utilities/error-handling';
+import Loader from "../UI/Loader";
+import SkeletonList from '../UI/SkeletonList';
 import {rootURL} from "../../constants/URLs";
 
 const ProductList = () => {
@@ -49,9 +50,9 @@ const ProductList = () => {
     }, [isLoading]);
 
     // useEffect(() => {
+    //     setIsLoading(true);
     //     setProducts([]);
     //     setOffset(0);
-    //     setIsLoading(true);
     //     window.scroll({
     //         top: 0,
     //         left: 0,
@@ -105,13 +106,27 @@ const ProductList = () => {
             })
     }
 
-    const SkeletonList = () => (
+    const memoizedList = useMemo(() => (
         <>
-            {Array(8)
-                .fill(null)
-                .map((_, index) => <ProductSkeleton key={index}/>)}
+            {products.map(product => (
+                <ProductItem product={product} key={product.id}/>
+            ))}
         </>
-    )
+    ), [products]);
+
+    const NoContent = () => {
+        return isLoading ? <SkeletonList amount={8}/> : (
+            <Center h='50vh'>
+                <Text color='gray'>В данной категории нет товаров</Text>
+            </Center>
+        )
+    }
+
+    if (error) {
+        return <Box py='40px'>
+            <ErrorMessage message={error}/>
+        </Box>
+    }
 
     return (
         <Box
@@ -142,40 +157,15 @@ const ProductList = () => {
                         </Button>
                     }
                 </Flex>
-                {error && <ErrorMessage message={error}/>}
                 <SimpleGrid minChildWidth='210px' width='100%' spacing='6'>
-                    {isLoading && products.length === 0
-                        ? <SkeletonList/>
-                        : (
-                            products.map(product => (
-                                <ProductItem product={product} key={product.id}/>
-                            ))
-                        )
-                    }
-                    {!isLoading && !error && products.length === 0 && (
-                        <Center h='50vh'>
-
-                            <Text color='gray'>
-                                {isEmpty(currentCategory)
-                                    ? 'Список товаров пуст'
-                                    : 'В данной категории нет товаров'
-                                }
-
-                            </Text>
-                        </Center>
-                    )}
+                    {products.length === 0 ? <NoContent/> : memoizedList}
                 </SimpleGrid>
-                {products.length > 0 && isLoading && (
+                {isLoading && products.length > 0 && (
                     <Center mt={10}>
-                        <Spinner thickness='4px'
-                                 speed='0.65s'
-                                 emptyColor='gray.200'
-                                 color='yellow.500'
-                                 size='xl'/>
+                        <Loader/>
                     </Center>
                 )}
             </>
-
             <NewProductDrawer isOpen={isOpen} onClose={onClose} onAddNewProduct={onAddNewProduct}/>
         </Box>
     );
