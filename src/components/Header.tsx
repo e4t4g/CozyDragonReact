@@ -57,13 +57,14 @@ export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
 
     const [isAuth, setIsAuth] = useState(false);
-    const authDisclosure = useDisclosure();
+    const signInDisclosure = useDisclosure();
+    const signUpDisclosure = useDisclosure();
 
     const isAdmin = true;
 
-    const googleSignInHandler = async () => {
+    const signInHandler = async (source: string) => {
         await axios.get(
-            `/user/login/google`
+            `/user/login/${source}`
         )
             .then(({data}) => {
                 console.log(data);
@@ -74,7 +75,7 @@ export const Header = () => {
                 ToastError(error.message);
             })
             .finally(() => {
-                authDisclosure.onClose();
+                signInDisclosure.onClose();
             })
     }
 
@@ -103,44 +104,49 @@ export const Header = () => {
                 </Flex>
             </Link>
             <Flex alignItems={'center'}>
-                {<HStack
-                    as={'nav'}
-                    spacing={2}
-                    marginX={6}
-                    fontSize='25px'>
-                    {!isAdmin && Links.map(({title, icon, path}) => (
-                        <Link to={path} key={title}>
-                            {icon}
-                        </Link>
-                    ))}
+                {!isAuth && <HStack>
+                    <Button onClick={signInDisclosure.onOpen} backgroundColor='gray.300' px={6}>Войти</Button>
+                    <Button onClick={signUpDisclosure.onOpen} colorScheme={"yellow"} px={6}>Регистрация</Button>
                 </HStack>}
-                <Menu>
-                    <MenuButton
-                        as={Button}
-                        rounded={'full'}
-                        variant={'link'}
-                        cursor={'pointer'}
-                        minW={0}>
-                        <Avatar
-                            size={'sm'}
-                            src={
-                                'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                            }
-                        />
-                    </MenuButton>
-                    <MenuList>
-                        {!isAuth && <MenuItem onClick={authDisclosure.onOpen}>Sign in</MenuItem>}
 
-                        {!isAdmin && isAuth && <MenuItem>Мои заказы</MenuItem>}
-                        {isAuth && <MenuDivider/>}
-                        {isAuth && <MenuItem>Выйти</MenuItem>}
-                    </MenuList>
-                </Menu>
+                {isAuth && <>
+                    <HStack
+                        as={'nav'}
+                        spacing={2}
+                        marginX={6}
+                        fontSize='25px'>
+                        {!isAdmin && Links.map(({title, icon, path}) => (
+                            <Link to={path} key={title}>
+                                {icon}
+                            </Link>
+                        ))}
+                    </HStack>
+                    <Menu>
+                        <MenuButton
+                            as={Button}
+                            rounded={'full'}
+                            variant={'link'}
+                            cursor={'pointer'}
+                            minW={0}>
+                            <Avatar
+                                size={'sm'}
+                                src={
+                                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                                }
+                            />
+                        </MenuButton>
+                        <MenuList>
+                            {!isAdmin && isAuth && <MenuItem>Мои заказы</MenuItem>}
+                            {isAuth && <MenuDivider/>}
+                            {isAuth && <MenuItem>Выйти</MenuItem>}
+                        </MenuList>
+                    </Menu>
+                </>}
             </Flex>
 
-            <Auth isOpen={authDisclosure.isOpen}
-                  onClose={authDisclosure.onClose}
-                  googleSignInHandler={googleSignInHandler}/>
+            <Auth isOpen={signInDisclosure.isOpen}
+                  onClose={signInDisclosure.onClose}
+                  signInHandler={signInHandler}/>
         </Flex>
     );
 }
