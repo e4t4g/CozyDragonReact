@@ -4,7 +4,6 @@ import {
     Button,
     Flex,
     HStack,
-    IconButton,
     Menu,
     MenuButton,
     MenuDivider,
@@ -13,45 +12,15 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import {MdFavorite} from 'react-icons/md';
-import {Link} from 'react-router-dom'
-import {BsBagFill} from 'react-icons/bs';
+import {Link} from 'react-router-dom';
 import {useCategory} from "../context/CategoryContext";
-import {useCart} from "../context/CartContext";
-import {formatCurrency} from "../utilities/formatCurrency";
 import {ICategory} from '../models/ICategory';
 import Auth from './modals/Auth';
 import axios from "axios";
 import {ToastError, ToastSuccess} from "../utilities/error-handling";
-
-const CartButton = () => {
-    const {cartItems, getTotalCost} = useCart();
-    return (
-        <>
-            {cartItems.length > 0 ?
-                <Button leftIcon={<BsBagFill fontSize='x-large'/>} colorScheme='yellow' variant='solid'
-                        fontSize='large'>
-                    <Text as='span' pt={1} fontWeight='normal'>{formatCurrency(getTotalCost())}</Text>
-                </Button>
-                :
-                <IconButton
-                    aria-label='Корзина'
-                    fontSize='x-large'
-                    icon={<BsBagFill/>}
-                />
-            }
-        </>
-    )
-}
-
-const Links = [
-    {title: 'Cart', icon: <CartButton/>, path: 'cart'},
-    {
-        title: 'Favorite',
-        icon: <IconButton aria-label='Избранное' fontSize='x-large' icon={<MdFavorite/>}/>,
-        path: 'favourites'
-    }
-];
+import {IUser} from "../models/IUser";
+import { Links } from './cart/Links';
+import { isAdmin } from '../constants/isAdmin';
 
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
@@ -60,11 +29,28 @@ export const Header = () => {
     const signInDisclosure = useDisclosure();
     const signUpDisclosure = useDisclosure();
 
-    const isAdmin = false;
-
-    const signInHandler = async (source: string) => {
+    const signInBySocial = async (source: string) => {
         await axios.get(
             `/user/login/${source}`
+        )
+            .then(({data}) => {
+                console.log(data);
+                ToastSuccess('Вы успешно авторизовались');
+                setIsAuth(true);
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                signInDisclosure.onClose();
+            })
+    }
+
+    const signInByEmail = async ({email, password}: IUser) => {
+        await axios.post(
+            `/user/login/`, {
+                email, password
+            }
         )
             .then(({data}) => {
                 console.log(data);
@@ -146,7 +132,8 @@ export const Header = () => {
 
             <Auth isOpen={signInDisclosure.isOpen}
                   onClose={signInDisclosure.onClose}
-                  signInHandler={signInHandler}/>
+                  signInHandler={signInBySocial}
+                  signInByEmail={signInByEmail}/>
         </Flex>
     );
 }

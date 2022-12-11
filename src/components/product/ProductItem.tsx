@@ -1,6 +1,7 @@
 import {Box, Flex, Image, Stack, Text} from '@chakra-ui/react';
 import {FC} from "react";
 import {Link} from 'react-router-dom';
+import { isAdmin } from '../../constants/isAdmin';
 import {useCart} from "../../context/CartContext";
 import {IProduct} from '../../models/IProduct';
 import {formatCurrency} from "../../utilities/formatCurrency";
@@ -17,7 +18,6 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
     const quantity = getItemQuantity(id);
 
     const isFav = false;
-    const isAdmin = false;
 
     return (
         <Flex
