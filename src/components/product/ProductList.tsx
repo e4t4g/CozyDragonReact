@@ -30,7 +30,8 @@ const ProductList = () => {
         await axios.get(
             // isEmpty(currentCategory)
             //     ?
-                `${rootURL}/items/list/?offset=${offset}&limit=${limit}`
+                `${rootURL}/items/list`
+                // `${rootURL}/items/list/?offset=${offset}&limit=${limit}`
                 // : `${rootURL}/items/categories/${currentCategory.name}`
         )
             .then(response => {
