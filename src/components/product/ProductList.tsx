@@ -12,6 +12,7 @@ import {ToastError, ToastSuccess} from '../../utilities/error-handling';
 import Loader from "../UI/Loader";
 import SkeletonList from '../UI/SkeletonList';
 import {rootURL} from "../../constants/URLs";
+import { isAdmin } from '../../constants/isAdmin';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -22,8 +23,6 @@ const ProductList = () => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [isLoading, setIsLoading] = useState(true);
     // const [contentLength, setContentLength] = useState(0);
-
-    const isAdmin = true;
 
     const fetchProducts = async () => {
         setError('');

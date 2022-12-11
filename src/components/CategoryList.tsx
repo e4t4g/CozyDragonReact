@@ -13,6 +13,7 @@ import EditCategoryModal from './modals/EditCategoryModal';
 import {ToastError, ToastSuccess} from '../utilities/error-handling';
 import CreateCategoryModal from './modals/CreateCategory';
 import { rootURL } from '../constants/URLs';
+import {isAdmin} from "../constants/isAdmin";
 
 export const CategoryList = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -22,9 +23,6 @@ export const CategoryList = () => {
     const {currentCategory, categories, onChangeCurrentCategory, onChangeCategories} = useCategory();
     const [selectedCategory, setSelectedCategory] = useState({} as ICategory);
     const [error, setError] = useState('');
-
-    const isAdmin = true;
-
     const fetchCategories = async () => {
         setIsLoading(true)
         await axios.get(`${rootURL}/categories/list`)

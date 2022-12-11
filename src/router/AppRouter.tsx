@@ -1,10 +1,9 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
+import { isAdmin } from '../constants/isAdmin';
 import {adminRoutes, routes} from "./index";
 
 const AppRouter = () => {
-
-    const isAdmin = true;
 
     return (
         <Routes>
