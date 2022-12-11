@@ -23,6 +23,7 @@ import {ICategory} from '../models/ICategory';
 import Auth from './modals/Auth';
 import axios from "axios";
 import {ToastError, ToastSuccess} from "../utilities/error-handling";
+import { rootURL } from '../constants/URLs';
 
 const CartButton = () => {
     const {cartItems, getTotalCost} = useCart();
@@ -64,7 +65,7 @@ export const Header = () => {
 
     const signInHandler = async (source: string) => {
         await axios.get(
-            `/user/login/${source}`
+            `${rootURL}/user/login/${source}`
         )
             .then(({data}) => {
                 console.log(data);
