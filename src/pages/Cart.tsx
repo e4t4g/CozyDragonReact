@@ -32,6 +32,8 @@ export const Cart = () => {
     const {cartItems, getTotalCost, getGoodsCost, getDeliveryCost, getTotalQuantity} = useCart();
     const {currentCategory} = useCategory();
 
+    // TODO: получить содержимое корзины пользователя /cart/:userID
+
     const TotalCostTable = () => (
         <TableContainer mx={-5} mt={2} mb={4}>
             <Table variant='unstyled'>

@@ -27,7 +27,7 @@ export const CategoryList = () => {
 
     const fetchCategories = async () => {
         setIsLoading(true)
-        await axios.get(`${rootURL}/items/categories`)
+        await axios.get(`${rootURL}/categories/list`)
             .then(response => {
                 let result = response.data;
                 onChangeCategories(result);
@@ -76,7 +76,7 @@ export const CategoryList = () => {
 
     const onCreateCategory = async (category: ICategory) => {
         await axios.post(
-            `${rootURL}/categories/`,
+            `${rootURL}/categories/create`,
             {
                 'name': category.name
             }

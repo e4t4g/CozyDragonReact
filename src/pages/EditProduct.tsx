@@ -62,7 +62,8 @@ export const EditProduct = () => {
     }
 
     const onSaveChanges = async () => {
-        await axios.put(`${rootURL}/items/${productId}`,
+        // add /${productId}
+        await axios.put(`${rootURL}/items/update`,
             {
                 "title": product.title,
                 "price": product.price

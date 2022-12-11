@@ -16,8 +16,8 @@ import {rootURL} from "../../constants/URLs";
 const ProductList = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [error, setError] = useState('');
-    // const [offset, setOffset] = useState(0);
-    // const [limit] = useState(8);
+    const [offset, setOffset] = useState(0);
+    const [limit] = useState(8);
     const {currentCategory, onChangeCurrentCategory, categories} = useCategory();
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [isLoading, setIsLoading] = useState(true);
@@ -28,13 +28,14 @@ const ProductList = () => {
     const fetchProducts = async () => {
         setError('');
         await axios.get(
-            isEmpty(currentCategory)
-                ? `${rootURL}/items`
-                : `${rootURL}/items/categories/${currentCategory.name}`
+            // isEmpty(currentCategory)
+            //     ?
+                `${rootURL}/items/list/?offset=${offset}&limit=${limit}`
+                // : `${rootURL}/items/categories/${currentCategory.name}`
         )
             .then(response => {
                 setProducts([...products, ...response.data]);
-                // setOffset(prevState => prevState + limit);
+                setOffset(prevState => prevState + limit);
                 // setContentLength(+response.headers['content-length']);
             })
             .catch(e => setError(e.message))
@@ -48,6 +49,10 @@ const ProductList = () => {
             fetchProducts();
         }
     }, [isLoading]);
+
+    // TODO: get total /items/quantity
+
+    // TODO: строка поиска /items/search/:searchRequest
 
     // useEffect(() => {
     //     setIsLoading(true);
@@ -91,7 +96,7 @@ const ProductList = () => {
             "image": values.image
         };
 
-        await axios.post(`${rootURL}/items`, result)
+        await axios.post(`${rootURL}/items/create`, result)
             .then(() => {
                 if (currentCategory.id !== values.categoryId) {
                     onChangeCategory(values.categoryId);
