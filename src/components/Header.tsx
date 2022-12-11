@@ -19,8 +19,8 @@ import Auth from './modals/Auth';
 import axios from "axios";
 import {ToastError, ToastSuccess} from "../utilities/error-handling";
 import {IUser} from "../models/IUser";
-import { Links } from './cart/Links';
-import { isAdmin } from '../constants/isAdmin';
+import {Links} from './cart/Links';
+import {isAdmin} from '../constants/isAdmin';
 
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
@@ -48,12 +48,11 @@ export const Header = () => {
 
     const signInByEmail = async ({email, password}: IUser) => {
         await axios.post(
-            `/user/login/`, {
+            `https://api.escuelajs.co/api/v1/auth/login`, {
                 email, password
             }
         )
             .then(({data}) => {
-                console.log(data);
                 ToastSuccess('Вы успешно авторизовались');
                 setIsAuth(true);
             })
