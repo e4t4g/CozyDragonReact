@@ -1,58 +1,89 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-    Flex,
     Avatar,
-    HStack,
     Button,
+    Flex,
+    HStack,
     Menu,
     MenuButton,
-    MenuList,
-    MenuItem,
     MenuDivider,
+    MenuItem,
+    MenuList,
     Text,
-    IconButton,
+    useDisclosure,
 } from '@chakra-ui/react';
-import {MdFavorite} from 'react-icons/md';
-import {Link} from 'react-router-dom'
-import {BsBagFill} from 'react-icons/bs';
+import {Link} from 'react-router-dom';
 import {useCategory} from "../context/CategoryContext";
-import {useCart} from "../context/CartContext";
-import {formatCurrency} from "../utilities/formatCurrency";
-import { ICategory } from '../models/ICategory';
-
-const CartButton = () => {
-    const {cartItems, getTotalCost} = useCart();
-    return (
-        <>
-            {cartItems.length > 0 ?
-                <Button leftIcon={<BsBagFill fontSize='x-large'/>} colorScheme='yellow' variant='solid'
-                        fontSize='large'>
-                    <Text as='span' pt={1} fontWeight='normal'>{formatCurrency(getTotalCost())}</Text>
-                </Button>
-                :
-                <IconButton
-                    aria-label='Корзина'
-                    fontSize='x-large'
-                    icon={<BsBagFill/>}
-                />
-            }
-        </>
-    )
-}
-
-const Links = [
-    {title: 'Cart', icon: <CartButton/>, path: 'cart'},
-    {
-        title: 'Favorite',
-        icon: <IconButton aria-label='Избранное' fontSize='x-large' icon={<MdFavorite/>}/>,
-        path: 'favourites'
-    }
-];
+import {ICategory} from '../models/ICategory';
+import axios from "axios";
+import {ToastError, ToastSuccess} from "../utilities/error-handling";
+import SignIn from './modals/SignIn';
+import SignUp from "./modals/SignUp";
+import {ICustomer} from "../models/ICustomer";
+import {Links} from './cart/Links';
+import {isAdmin} from '../constants/isAdmin';
 
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
 
-    const isAdmin = false;
+    const [isAuth, setIsAuth] = useState(false);
+    const [customer, setCustomer] = useState({} as ICustomer);
+    const signInDisclosure = useDisclosure();
+    const signUpDisclosure = useDisclosure();
+
+    const signInBySocial = async (source: string) => {
+        await axios.get(
+            `/user/login/${source}`
+        )
+            .then(({data}) => {
+                console.log(data);
+                ToastSuccess('Вы успешно авторизовались');
+                setIsAuth(true);
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                signInDisclosure.onClose();
+            })
+    }
+
+    const signInByEmail = async ({email, password}: ICustomer) => {
+        await axios.post(
+            `https://api.escuelajs.co/api/v1/auth/login`, {
+                email, password
+            }
+        )
+            .then(({data}) => {
+                ToastSuccess('Вы успешно авторизовались');
+                setIsAuth(true);
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                signInDisclosure.onClose();
+            })
+    }
+    const signUpHandler = async ({name, email, password}: ICustomer) => {
+        await axios.post(
+            `https://api.escuelajs.co/api/v1/users/`, {
+                name, email, password,
+                avatar: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Missing_avatar.svg'
+            }
+        )
+            .then(({data}) => {
+                setCustomer(data)
+                ToastSuccess('Вы успешно зарегистрировались');
+                setIsAuth(true);
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                signUpDisclosure.onClose();
+            })
+    }
 
     return (
         <Flex bg='gray.100'
@@ -79,38 +110,55 @@ export const Header = () => {
                 </Flex>
             </Link>
             <Flex alignItems={'center'}>
-                {<HStack
-                    as={'nav'}
-                    spacing={2}
-                    marginX={6}
-                    fontSize='25px'>
-                    {!isAdmin && Links.map(({title, icon, path}) => (
-                        <Link to={path} key={title}>
-                            {icon}
-                        </Link>
-                    ))}
+                {!isAuth && <HStack>
+                    <Button onClick={signInDisclosure.onOpen} backgroundColor='gray.300' px={6}>Войти</Button>
+                    <Button onClick={signUpDisclosure.onOpen} colorScheme={"yellow"} px={6}>Регистрация</Button>
                 </HStack>}
-                <Menu>
-                    <MenuButton
-                        as={Button}
-                        rounded={'full'}
-                        variant={'link'}
-                        cursor={'pointer'}
-                        minW={0}>
-                        <Avatar
-                            size={'sm'}
-                            src={
-                                'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                            }
-                        />
-                    </MenuButton>
-                    <MenuList>
-                        {!isAdmin && <MenuItem>Мои заказы</MenuItem>}
-                        <MenuDivider/>
-                        <MenuItem>Выйти</MenuItem>
-                    </MenuList>
-                </Menu>
+
+                {isAuth && <>
+                    <HStack
+                        as={'nav'}
+                        spacing={2}
+                        marginX={6}
+                        fontSize='25px'>
+                        {!isAdmin && Links.map(({title, icon, path}) => (
+                            <Link to={path} key={title}>
+                                {icon}
+                            </Link>
+                        ))}
+                    </HStack>
+                    <Menu>
+                        <MenuButton
+                            as={Button}
+                            rounded={'full'}
+                            variant={'link'}
+                            cursor={'pointer'}
+                            minW={0}>
+                            <Avatar
+                                size={'md'}
+                                src={customer?.avatar}
+                                border='1px solid'
+                                borderColor='gray.400'
+                            />
+                        </MenuButton>
+                        <MenuList>
+                            {!isAdmin && isAuth && <MenuItem>Мои заказы</MenuItem>}
+                            {isAuth && <MenuDivider/>}
+                            {isAuth && <MenuItem>Выйти</MenuItem>}
+                        </MenuList>
+                    </Menu>
+                </>}
             </Flex>
+
+            <SignIn isOpen={signInDisclosure.isOpen}
+                    onClose={signInDisclosure.onClose}
+                    onOpenSignUp={signUpDisclosure.onOpen}
+                    signInHandler={signInBySocial}
+                    signInByEmail={signInByEmail}/>
+            <SignUp isOpen={signUpDisclosure.isOpen}
+                    onClose={signUpDisclosure.onClose}
+                    onOpenSignIn={signInDisclosure.onOpen}
+                    signUpHandler={signUpHandler}/>
         </Flex>
     );
 }
