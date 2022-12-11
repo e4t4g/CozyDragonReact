@@ -15,10 +15,11 @@ import {
 import {Link} from 'react-router-dom';
 import {useCategory} from "../context/CategoryContext";
 import {ICategory} from '../models/ICategory';
-import Auth from './modals/Auth';
 import axios from "axios";
 import {ToastError, ToastSuccess} from "../utilities/error-handling";
-import {IUser} from "../models/IUser";
+import SignIn from './modals/SignIn';
+import SignUp from "./modals/SignUp";
+import {ICustomer} from "../models/ICustomer";
 import {Links} from './cart/Links';
 import {isAdmin} from '../constants/isAdmin';
 
@@ -26,6 +27,7 @@ export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
 
     const [isAuth, setIsAuth] = useState(false);
+    const [customer, setCustomer] = useState({} as ICustomer);
     const signInDisclosure = useDisclosure();
     const signUpDisclosure = useDisclosure();
 
@@ -46,7 +48,7 @@ export const Header = () => {
             })
     }
 
-    const signInByEmail = async ({email, password}: IUser) => {
+    const signInByEmail = async ({email, password}: ICustomer) => {
         await axios.post(
             `https://api.escuelajs.co/api/v1/auth/login`, {
                 email, password
@@ -61,6 +63,25 @@ export const Header = () => {
             })
             .finally(() => {
                 signInDisclosure.onClose();
+            })
+    }
+    const signUpHandler = async ({name, email, password}: ICustomer) => {
+        await axios.post(
+            `https://api.escuelajs.co/api/v1/users/`, {
+                name, email, password,
+                avatar: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Missing_avatar.svg'
+            }
+        )
+            .then(({data}) => {
+                setCustomer(data)
+                ToastSuccess('Вы успешно зарегистрировались');
+                setIsAuth(true);
+            })
+            .catch(error => {
+                ToastError(error.message);
+            })
+            .finally(() => {
+                signUpDisclosure.onClose();
             })
     }
 
@@ -114,10 +135,10 @@ export const Header = () => {
                             cursor={'pointer'}
                             minW={0}>
                             <Avatar
-                                size={'sm'}
-                                src={
-                                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                                }
+                                size={'md'}
+                                src={customer?.avatar}
+                                border='1px solid'
+                                borderColor='gray.400'
                             />
                         </MenuButton>
                         <MenuList>
@@ -129,10 +150,15 @@ export const Header = () => {
                 </>}
             </Flex>
 
-            <Auth isOpen={signInDisclosure.isOpen}
-                  onClose={signInDisclosure.onClose}
-                  signInHandler={signInBySocial}
-                  signInByEmail={signInByEmail}/>
+            <SignIn isOpen={signInDisclosure.isOpen}
+                    onClose={signInDisclosure.onClose}
+                    onOpenSignUp={signUpDisclosure.onOpen}
+                    signInHandler={signInBySocial}
+                    signInByEmail={signInByEmail}/>
+            <SignUp isOpen={signUpDisclosure.isOpen}
+                    onClose={signUpDisclosure.onClose}
+                    onOpenSignIn={signInDisclosure.onOpen}
+                    signUpHandler={signUpHandler}/>
         </Flex>
     );
 }

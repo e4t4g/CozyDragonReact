@@ -4,17 +4,20 @@ import {Button, FormControl, Input, Stack, Text} from "@chakra-ui/react";
 import * as Yup from "yup";
 import {ICustomer} from "../../models/ICustomer";
 
-interface SignInByEmailFormProps {
-    signInByEmail: (data: ICustomer) => void
+interface SignUpFormProps {
+    signUpHandler: (data: ICustomer) => void
 }
 
 export interface Values {
+    name: string;
     email: string;
     password: string;
 }
 
-const SignInByEmailForm = ({signInByEmail}: SignInByEmailFormProps) => {
+const SignUpForm = ({signUpHandler}: SignUpFormProps) => {
     const ValidationSchema = Yup.object().shape({
+        name: Yup.string()
+            .required('Пожалуйста, введите вашe имя'),
         email: Yup.string()
             .email('Пожалуйста, введите корректный  email')
             .required('Пожалуйста, введите ваш E-mail'),
@@ -27,6 +30,7 @@ const SignInByEmailForm = ({signInByEmail}: SignInByEmailFormProps) => {
     return (
         <Formik
             initialValues={{
+                name: '',
                 email: '',
                 password: ''
             }}
@@ -35,13 +39,28 @@ const SignInByEmailForm = ({signInByEmail}: SignInByEmailFormProps) => {
                 values: Values,
                 {setSubmitting}: FormikHelpers<Values>
             ) => {
-                signInByEmail(values)
+                signUpHandler(values)
                 setSubmitting(false);
             }}
         >
             {({isValid, dirty}) => (
                 <Form>
                     <Stack spacing={4} textAlign='left'>
+                        <FormControl>
+                            <Field name='name'>
+                                {({field, meta}: any) => (
+                                    <>
+                                        <Input type='text'
+                                               placeholder='Введите ваше имя'
+                                               mb={2}
+                                               isInvalid={meta.touched ? meta.error : false} {...field} />
+                                        {meta.touched && meta.error && (
+                                            <Text color='red.400' fontSize='md'>{meta.error}</Text>
+                                        )}
+                                    </>
+                                )}
+                            </Field>
+                        </FormControl>
                         <FormControl>
                             <Field name='email'>
                                 {({field, meta}: any) => (
@@ -72,7 +91,8 @@ const SignInByEmailForm = ({signInByEmail}: SignInByEmailFormProps) => {
                                 )}
                             </Field>
                         </FormControl>
-                        <Button type='submit' colorScheme='yellow' isDisabled={!isValid || !dirty}>Войти</Button>
+                        <Button type='submit' colorScheme='yellow'
+                                isDisabled={!isValid || !dirty}>Зарегистрироваться</Button>
                     </Stack>
                 </Form>
             )}
@@ -80,4 +100,4 @@ const SignInByEmailForm = ({signInByEmail}: SignInByEmailFormProps) => {
     );
 };
 
-export default SignInByEmailForm;
+export default SignUpForm;
