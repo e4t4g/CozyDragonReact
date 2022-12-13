@@ -27,7 +27,7 @@ export default function Footer() {
                         ml: 8,
                     }}>
                     <Text fontSize={'sm'} textAlign={'center'} color='gray'>
-                        © 2022 GB Store. All rights reserved
+                        © 2022 Cozy Dragon. All rights reserved
                     </Text>
                 </Flex>
             </Box>
