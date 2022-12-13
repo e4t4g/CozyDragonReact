@@ -104,8 +104,8 @@ export const Header = () => {
                          xmlns="http://www.w3.org/2000/svg">
                         <image href="/imgs/logo.svg" height="52" width="52"/>
                     </svg>
-                    <Text ml={2} as='h1' fontSize='4xl' fontWeight='thin'>
-                        GB Store
+                    <Text ml={2} as='h1' fontSize='4xl' fontWeight='thin' textTransform='lowercase'>
+                        store
                     </Text>
                 </Flex>
             </Link>
