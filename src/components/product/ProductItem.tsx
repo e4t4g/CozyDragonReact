@@ -39,13 +39,13 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
                 <Link
                     to={isAdmin ? `/edit/${id}/${title}` : `/${product.category?.name?.toLowerCase()}/${product.id}/${product.title}`}>
                     <Flex height='250px' width='100%' justifyContent='center'>
-                        <Image
+                        {image && <Image
                             maxH='100%'
                             maxW='100%'
                             objectFit={'contain'}
                             src={image[0]}
                             fallbackSrc={'/imgs/placeholder-image.jpg'}
-                        />
+                        />}
                     </Flex>
                     <Stack height='130px' alignItems='start' justifyContent='center' px={4}>
                         <Text fontWeight={700} fontSize={'xl'}>
