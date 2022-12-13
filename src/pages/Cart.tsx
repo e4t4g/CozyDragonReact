@@ -93,7 +93,7 @@ export const Cart = () => {
                                         minH='110px'
                                         minW='110px'
                                         objectFit={'contain'}
-                                        src={product.image}
+                                        src={product.image[0]}
                                         fallbackSrc={'/imgs/placeholder-image.jpg'}
                                     />
                                 </Flex>

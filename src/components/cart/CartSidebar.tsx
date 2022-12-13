@@ -42,7 +42,7 @@ const CartSidebar = () => {
                                             minH='100px'
                                             minW='100px'
                                             objectFit={'contain'}
-                                            src={product.image}
+                                            src={product.image[0]}
                                             fallbackSrc={'/imgs/placeholder-image.jpg'}
                                         />
                                     </Flex>

@@ -43,7 +43,7 @@ export const ProductItem: FC<ProductItemProps> = ({product}) => {
                             maxH='100%'
                             maxW='100%'
                             objectFit={'contain'}
-                            src={image}
+                            src={image[0]}
                             fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>

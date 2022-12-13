@@ -53,7 +53,7 @@ export const EditProduct = () => {
     const updateTitle = (v: string) => setProduct({...product, title: v})
     const updateDescription = (v: string) => setProduct({...product, description: v})
     const updatePrice = (v: string) => setProduct({...product, price: v})
-    const updateImage = (v: string) => setProduct({...product, image: v})
+    const updateImage = (v: string) => setProduct({...product, image: [v]})
 
 
     // const updateIsInStock = (e: ChangeEvent<HTMLInputElement>) => setProduct({...product, inStock: e.target.value})
@@ -102,7 +102,7 @@ export const EditProduct = () => {
             {!isLoading && error && <ErrorMessage message={error}/>}
             {!isLoading && !isEmpty(product) &&
                 <Flex gap={5} pt={20} minH='555px'>
-                    <EditImage image={product?.image} updateImage={updateImage}/>
+                    <EditImage image={product?.image[0]} updateImage={updateImage}/>
                     <VStack spacing={5} flex={1} alignItems='start' justifyContent='center' alignSelf='start'>
                         <EditCategory category={product.category} updateCategory={updateCategory}/>
                         <Checkbox iconSize='lg' colorScheme='yellow' isChecked={isInStock} onChange={updateIsInStock}>

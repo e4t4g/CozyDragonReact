@@ -65,7 +65,7 @@ export const Product = () => {
                             minH='500px'
                             minW='500px'
                             objectFit={'contain'}
-                            src={product.image}
+                            src={product.image[0]}
                             fallbackSrc={'/imgs/placeholder-image.jpg'}
                         />
                     </Flex>
