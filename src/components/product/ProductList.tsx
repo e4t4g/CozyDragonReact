@@ -7,7 +7,6 @@ import ErrorMessage from "../UI/ErrorMessage";
 import {useCategory} from "../../context/CategoryContext";
 import {GrAdd} from "react-icons/gr";
 import NewProductDrawer, {Values} from './NewProductDrawer';
-import {isEmpty} from "../../utilities/isEmpty";
 import {ToastError, ToastSuccess} from '../../utilities/error-handling';
 import Loader from "../UI/Loader";
 import SkeletonList from '../UI/SkeletonList';
@@ -93,7 +92,7 @@ const ProductList = () => {
             "description": values.description,
             "price": values.price,
             "category": values.categoryId,
-            "image": values.image
+            "image": [values.image]
         };
 
         await axios.post(`${rootURL}/items/create`, result)

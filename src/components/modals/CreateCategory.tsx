@@ -8,8 +8,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay,
-    VStack
+    ModalOverlay
 } from "@chakra-ui/react";
 import {ICategory} from "../../models/ICategory";
 import {isEmpty} from "../../utilities/isEmpty";
@@ -35,11 +34,12 @@ const CreateCategoryModal = ({
             <ModalContent>
                 <ModalHeader borderBottom='1px solid' borderBottomColor='gray.200'>Создание категории</ModalHeader>
                 <ModalCloseButton/>
-                <ModalBody my={4}>
-                    <VStack spacing={4}>
-                        <Input placeholder='Введите название категории' value={category.name}
-                               onChange={(e) => handleSelectedCategory({...category, name: e.target.value})}/>
-                    </VStack>
+                <ModalBody my={4} gap={2}>
+                    <Input placeholder='Введите название категории' value={category.name}
+                           onChange={(e) => handleSelectedCategory({...category, name: e.target.value})}/>
+                    <Input placeholder='Введите описание категории' value={category.description}
+                           onChange={(e) => handleSelectedCategory({...category, description: e.target.value})}/>
+
                 </ModalBody>
                 <ModalFooter>
                     <Button variant='ghost' mr={3} onClick={onClose}>

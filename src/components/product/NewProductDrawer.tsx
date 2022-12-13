@@ -22,7 +22,7 @@ import {useCategory} from "../../context/CategoryContext";
 
 export interface Values {
     title: string;
-    price: string;
+    price: number;
     description: string;
     categoryId: number;
     image: string;
@@ -70,7 +70,7 @@ const NewProductDrawer = ({isOpen, onClose, onAddNewProduct}: NewProductDrawerPr
                 <Formik
                     initialValues={{
                         title: '',
-                        price: '',
+                        price: 0,
                         description: '',
                         categoryId: currentCategory.id,
                         image: '',
