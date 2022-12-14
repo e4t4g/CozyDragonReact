@@ -9,8 +9,8 @@ const ErrorMessage = ({message}: ErrorMessageProps) => {
     return (
         <Alert status='error'>
             <AlertIcon/>
-            <AlertTitle>Error:</AlertTitle>
-            <AlertDescription>{message}</AlertDescription>
+            <AlertTitle>Ошибка:</AlertTitle>
+            <AlertDescription fontSize='sm'>{message}</AlertDescription>
         </Alert>
     );
 };

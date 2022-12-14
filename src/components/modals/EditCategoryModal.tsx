@@ -8,7 +8,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay
+    ModalOverlay, VStack
 } from "@chakra-ui/react";
 import {ICategory} from "../../models/ICategory";
 
@@ -34,7 +34,10 @@ const EditCategoryModal = ({
                 <ModalHeader borderBottom='1px solid' borderBottomColor='gray.200'>Переименовать категорию</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody my={4}>
-                    <Input value={category.name} onChange={(e) => handleSelectedCategory(e.target.value)}/>
+                    <VStack spacing={3}>
+                        <Input value={category.name} onChange={(e) => handleSelectedCategory(e.target.value)}/>
+                        <Input value={category.description} onChange={(e) => handleSelectedCategory(e.target.value)}/>
+                    </VStack>
                 </ModalBody>
                 <ModalFooter>
                     <Button variant='ghost' mr={3} onClick={onClose}>

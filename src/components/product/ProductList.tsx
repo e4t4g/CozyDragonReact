@@ -7,10 +7,10 @@ import ErrorMessage from "../UI/ErrorMessage";
 import {useCategory} from "../../context/CategoryContext";
 import {GrAdd} from "react-icons/gr";
 import NewProductDrawer, {Values} from './NewProductDrawer';
-import {isEmpty} from "../../utilities/isEmpty";
 import {ToastError, ToastSuccess} from '../../utilities/error-handling';
 import Loader from "../UI/Loader";
 import SkeletonList from '../UI/SkeletonList';
+import {rootURL} from "../../constants/URLs";
 import { isAdmin } from '../../constants/isAdmin';
 
 const ProductList = () => {
@@ -21,19 +21,21 @@ const ProductList = () => {
     const {currentCategory, onChangeCurrentCategory, categories} = useCategory();
     const {isOpen, onOpen, onClose} = useDisclosure()
     const [isLoading, setIsLoading] = useState(true);
-    const [contentLength, setContentLength] = useState(0);
+    // const [contentLength, setContentLength] = useState(0);
 
     const fetchProducts = async () => {
         setError('');
         await axios.get(
-            isEmpty(currentCategory)
-                ? `https://api.escuelajs.co/api/v1/products?offset=${offset}&limit=${limit}`
-                : `https://api.escuelajs.co/api/v1/categories/${currentCategory.id}/products?offset=${offset}&limit=${limit}`
+            // isEmpty(currentCategory)
+            //     ?
+                `${rootURL}/items/list`
+                // `${rootURL}/items/list/?offset=${offset}&limit=${limit}`
+                // : `${rootURL}/items/categories/${currentCategory.name}`
         )
             .then(response => {
                 setProducts([...products, ...response.data]);
                 setOffset(prevState => prevState + limit);
-                setContentLength(+response.headers['content-length']);
+                // setContentLength(+response.headers['content-length']);
             })
             .catch(e => setError(e.message))
             .finally(() => {
@@ -47,31 +49,35 @@ const ProductList = () => {
         }
     }, [isLoading]);
 
-    useEffect(() => {
-        setIsLoading(true);
-        setProducts([]);
-        setOffset(0);
-        window.scroll({
-            top: 0,
-            left: 0,
-        });
-    }, [currentCategory]);
+    // TODO: get total /items/quantity
 
-    useEffect(() => {
-        document.addEventListener('scroll', scrollHandler)
-        return function () {
-            document.removeEventListener('scroll', scrollHandler)
-        }
-    })
+    // TODO: строка поиска /items/search/:searchRequest
 
-    const scrollHandler = (e: any) => {
-        const scrollHeight = e.target.documentElement.scrollHeight;
-        const scrollTop = e.target.documentElement.scrollTop;
-        const innerHeight = window.innerHeight;
-        if (scrollHeight - (scrollTop + innerHeight) < 200 && contentLength > 2) {
-            setIsLoading(true)
-        }
-    }
+    // useEffect(() => {
+    //     setIsLoading(true);
+    //     setProducts([]);
+    //     setOffset(0);
+    //     window.scroll({
+    //         top: 0,
+    //         left: 0,
+    //     });
+    // }, [currentCategory]);
+    //
+    // useEffect(() => {
+    //     document.addEventListener('scroll', scrollHandler)
+    //     return function () {
+    //         document.removeEventListener('scroll', scrollHandler)
+    //     }
+    // })
+    //
+    // const scrollHandler = (e: any) => {
+    //     const scrollHeight = e.target.documentElement.scrollHeight;
+    //     const scrollTop = e.target.documentElement.scrollTop;
+    //     const innerHeight = window.innerHeight;
+    //     if (scrollHeight - (scrollTop + innerHeight) < 200 && contentLength > 2) {
+    //         setIsLoading(true)
+    //     }
+    // }
 
     const onChangeCategory = (id: number) => {
         const selectedCategory = categories.find(c => c.id == id);
@@ -83,13 +89,13 @@ const ProductList = () => {
     const onAddNewProduct = async (values: Values) => {
         const result = {
             "title": values.title,
-            "price": values.price,
             "description": values.description,
-            "categoryId": values.categoryId,
-            "images": [values.image]
+            "price": values.price,
+            "category": values.categoryId,
+            "image": [values.image]
         };
 
-        await axios.post('https://api.escuelajs.co/api/v1/products/', result)
+        await axios.post(`${rootURL}/items/create`, result)
             .then(() => {
                 if (currentCategory.id !== values.categoryId) {
                     onChangeCategory(values.categoryId);

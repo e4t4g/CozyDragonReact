@@ -22,7 +22,7 @@ import {useCategory} from "../../context/CategoryContext";
 
 export interface Values {
     title: string;
-    price: string;
+    price: number;
     description: string;
     categoryId: number;
     image: string;
@@ -61,7 +61,8 @@ const NewProductDrawer = ({isOpen, onClose, onAddNewProduct}: NewProductDrawerPr
             <DrawerOverlay backdropFilter='blur(2px)'/>
             <DrawerContent minWidth='500px'>
                 <DrawerCloseButton/>
-                <DrawerHeader borderBottomWidth='1px' backgroundColor='gray.100' boxShadow='md' minH='80px' display='flex'
+                <DrawerHeader borderBottomWidth='1px' backgroundColor='gray.100' boxShadow='md' minH='80px'
+                              display='flex'
                               alignItems='center'>
                     Новый товар
                 </DrawerHeader>
@@ -69,7 +70,7 @@ const NewProductDrawer = ({isOpen, onClose, onAddNewProduct}: NewProductDrawerPr
                 <Formik
                     initialValues={{
                         title: '',
-                        price: '',
+                        price: 0,
                         description: '',
                         categoryId: currentCategory.id,
                         image: '',
@@ -83,11 +84,11 @@ const NewProductDrawer = ({isOpen, onClose, onAddNewProduct}: NewProductDrawerPr
                         setSubmitting(false);
                     }}
                 >
-                    {({isSubmitting, values}) => (
+                    {({isSubmitting}) => (
                         <Form style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
                             <DrawerBody flex={1}>
                                 <Stack spacing={6} py={4}>
-                                    <FormControl>
+                                    {categories.length > 0 && <FormControl>
                                         <FormLabel htmlFor='categoryId' fontSize='sm' color='gray.400'>Категория
                                             товара</FormLabel>
                                         <Field name="categoryId">
@@ -107,6 +108,7 @@ const NewProductDrawer = ({isOpen, onClose, onAddNewProduct}: NewProductDrawerPr
                                             )}
                                         </Field>
                                     </FormControl>
+                                    }
 
                                     <FormControl>
                                         <FormLabel htmlFor='title' fontSize='sm' color='gray.400'>Наименование

@@ -1,4 +1,4 @@
-import {Box, Button, Flex, Skeleton, Stack, useDisclosure} from '@chakra-ui/react';
+import {Box, Button, Center, Flex, Skeleton, Stack, Text, useDisclosure} from '@chakra-ui/react';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {NavItem} from './UI/NavItem';
@@ -12,6 +12,7 @@ import RemoveCategoryModal from './modals/RemoveCategoryModal';
 import EditCategoryModal from './modals/EditCategoryModal';
 import {ToastError, ToastSuccess} from '../utilities/error-handling';
 import CreateCategoryModal from './modals/CreateCategory';
+import { rootURL } from '../constants/URLs';
 import {isAdmin} from "../constants/isAdmin";
 
 export const CategoryList = () => {
@@ -22,10 +23,9 @@ export const CategoryList = () => {
     const {currentCategory, categories, onChangeCurrentCategory, onChangeCategories} = useCategory();
     const [selectedCategory, setSelectedCategory] = useState({} as ICategory);
     const [error, setError] = useState('');
-
     const fetchCategories = async () => {
         setIsLoading(true)
-        await axios.get('https://api.escuelajs.co/api/v1/categories')
+        await axios.get(`${rootURL}/categories/list`)
             .then(response => {
                 let result = response.data;
                 onChangeCategories(result);
@@ -42,7 +42,7 @@ export const CategoryList = () => {
     }, []);
 
     const onRemoveCategory = async (id: number) => {
-        await axios.delete(`https://api.escuelajs.co/api/v1/categories/${id}`)
+        await axios.delete(`${rootURL}/categories/${id}`)
             .then(() => {
                 fetchCategories();
                 ToastSuccess('The category has been removed successfully');
@@ -57,7 +57,7 @@ export const CategoryList = () => {
 
     const onEditCategory = async (category: ICategory) => {
         await axios.put(
-            `https://api.escuelajs.co/api/v1/categories/${category.id}`,
+            `${rootURL}/categories/${category.id}`,
             {'name': category.name}
         )
             .then(() => {
@@ -74,10 +74,9 @@ export const CategoryList = () => {
 
     const onCreateCategory = async (category: ICategory) => {
         await axios.post(
-            `https://api.escuelajs.co/api/v1/categories/`,
+            `${rootURL}/categories/create`,
             {
-                'name': category.name,
-                'image': category.image
+                'name': category.name
             }
         )
             .then(() => {
@@ -99,15 +98,24 @@ export const CategoryList = () => {
 
     if (error) {
         return (
-            <>
-                <ErrorMessage message={error}/>
+            <Box
+                bg='white'
+                borderRight='1px'
+                position='sticky'
+                top='80px'
+                py={4}
+                height='calc(100vh - 80px)'
+                borderRightColor='gray.200'
+                overflowY='auto'>
+                <ErrorMessage message={'Не удалось получить список категорий'}/>
+
                 <Button
                     m={5}
                     leftIcon={<AiOutlineReload/>}
                     onClick={() => updateList()}>
-                    Обновить страницу
+                    Повторить запрос
                 </Button>
-            </>
+            </Box>
         )
     }
 
@@ -136,12 +144,20 @@ export const CategoryList = () => {
                     setSelectedCategory({} as ICategory);
                     createDisclosure.onOpen();
                 }}>Добавить категорию</Button>}
-                <NavItem
+
+                {categories.length === 0 && <Center>
+                    <Text mt={4} mx={2} color='gray' fontSize='sm'>
+                        Список категорий пуст
+                    </Text>
+                </Center>}
+
+                {categories.length > 0 && <NavItem
+                    key={0}
                     fontWeight={isEmpty(currentCategory) ? '800' : '400'}
                     onClick={() => onChangeCurrentCategory({} as ICategory)}
                 >
                     All
-                </NavItem>
+                </NavItem>}
                 {categories?.map((category) => (
                     <Flex
                         key={category.id}
@@ -168,29 +184,29 @@ export const CategoryList = () => {
                                             setSelectedCategory(category);
                                             removeDisclosure.onOpen();
                                         }}/>}
-                        <CreateCategoryModal
-                            isOpen={createDisclosure.isOpen}
-                            onClose={createDisclosure.onClose}
-                            category={selectedCategory}
-                            handleSelectedCategory={(category) => setSelectedCategory(category)}
-                            onEditCategory={onCreateCategory}
-                        />
-                        <EditCategoryModal
-                            isOpen={editDisclosure.isOpen}
-                            onClose={editDisclosure.onClose}
-                            category={selectedCategory}
-                            handleSelectedCategory={(e) => setSelectedCategory({...selectedCategory, name: e})}
-                            onEditCategory={onEditCategory}
-                        />
-                        <RemoveCategoryModal
-                            isOpen={removeDisclosure.isOpen}
-                            onClose={removeDisclosure.onClose}
-                            category={selectedCategory}
-                            onRemoveCategory={onRemoveCategory}
-                        />
                     </Flex>
                 ))}
             </Box>}
+            <CreateCategoryModal
+                isOpen={createDisclosure.isOpen}
+                onClose={createDisclosure.onClose}
+                category={selectedCategory ?? {} as ICategory}
+                handleSelectedCategory={(category) => setSelectedCategory(category)}
+                onEditCategory={onCreateCategory}
+            />
+            <EditCategoryModal
+                isOpen={editDisclosure.isOpen}
+                onClose={editDisclosure.onClose}
+                category={selectedCategory}
+                handleSelectedCategory={(e) => setSelectedCategory({...selectedCategory, name: e})}
+                onEditCategory={onEditCategory}
+            />
+            <RemoveCategoryModal
+                isOpen={removeDisclosure.isOpen}
+                onClose={removeDisclosure.onClose}
+                category={selectedCategory}
+                onRemoveCategory={onRemoveCategory}
+            />
         </>
     );
 };

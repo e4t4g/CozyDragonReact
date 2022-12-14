@@ -4,11 +4,11 @@ import {EditIcon} from "../UI/EditIcon";
 import {SaveIcon} from "../UI/SaveIcon";
 
 interface EditImageProps {
-    images: string[],
+    image: string,
     updateImage: (v: string) => void
 }
 
-export const EditImage = ({images, updateImage}: EditImageProps) => {
+export const EditImage = ({image, updateImage}: EditImageProps) => {
     const [isEditMode, setIsEditMode] = useState(false);
 
     return (
@@ -28,14 +28,14 @@ export const EditImage = ({images, updateImage}: EditImageProps) => {
                     maxH='100%'
                     maxW='100%'
                     objectFit={'contain'}
-                    src={images[0]}
+                    src={image}
                     fallbackSrc={'/imgs/placeholder-image.jpg'}
                 />
             </>}
 
             {isEditMode && <Flex flex={1} mt={2} mr={2}>
                 <Input
-                    value={images[0]}
+                    value={image}
                     mr={3}
                     variant='flushed'
                     borderBottomWidth='2px'

@@ -10,12 +10,12 @@ import {EditPrice} from '../components/edit-product/EditPrice';
 import {EditImage} from "../components/edit-product/EditImage";
 import {useCategory} from "../context/CategoryContext";
 import EditCategory from "../components/edit-product/EditCategory";
-
 import ErrorMessage from "../components/UI/ErrorMessage";
 import {isEmpty} from "../utilities/isEmpty";
 import {ICategory} from "../models/ICategory";
 import {MdDelete} from 'react-icons/md';
 import {ToastError, ToastSuccess} from "../utilities/error-handling";
+import {rootURL} from "../constants/URLs";
 
 export const EditProduct = () => {
     const {productId} = useParams();
@@ -30,9 +30,8 @@ export const EditProduct = () => {
     const getProduct = async () => {
         setIsLoading(true);
         await axios
-            .get(`https://api.escuelajs.co/api/v1/products/${productId}`)
+            .get(`${rootURL}/items/${productId}`)
             .then(({data}) => {
-                console.log(data)
                 setProduct(data);
             }).catch(error => {
                 setError(error.message);
@@ -54,13 +53,8 @@ export const EditProduct = () => {
     const updateTitle = (v: string) => setProduct({...product, title: v})
     const updateDescription = (v: string) => setProduct({...product, description: v})
     const updatePrice = (v: string) => setProduct({...product, price: v})
-    const updateImage = (v: string) => {
-        //todo: rewrite -->
-        const imgs = product.images;
-        imgs.shift();
-        imgs.unshift(v);
-        setProduct({...product, images: imgs})
-    }
+    const updateImage = (v: string) => setProduct({...product, image: [v]})
+
 
     // const updateIsInStock = (e: ChangeEvent<HTMLInputElement>) => setProduct({...product, inStock: e.target.value})
     const updateIsInStock = (e: any) => {
@@ -68,7 +62,8 @@ export const EditProduct = () => {
     }
 
     const onSaveChanges = async () => {
-        await axios.put(`https://api.escuelajs.co/api/v1/products/${productId}`,
+        // add /${productId}
+        await axios.put(`${rootURL}/items/update`,
             {
                 "title": product.title,
                 "price": product.price
@@ -83,7 +78,7 @@ export const EditProduct = () => {
     }
 
     const onRemoveProduct = async () => {
-        await axios.delete(`https://api.escuelajs.co/api/v1/products/${productId}`)
+        await axios.delete(`${rootURL}/items/${productId}`)
             .then(() => {
                     ToastSuccess('The product has been removed successfully');
                     navigate(`/${currentCategory?.name?.toLowerCase() ?? 'all'}`)
@@ -107,7 +102,7 @@ export const EditProduct = () => {
             {!isLoading && error && <ErrorMessage message={error}/>}
             {!isLoading && !isEmpty(product) &&
                 <Flex gap={5} pt={20} minH='555px'>
-                    <EditImage images={product?.images} updateImage={updateImage}/>
+                    <EditImage image={product?.image[0]} updateImage={updateImage}/>
                     <VStack spacing={5} flex={1} alignItems='start' justifyContent='center' alignSelf='start'>
                         <EditCategory category={product.category} updateCategory={updateCategory}/>
                         <Checkbox iconSize='lg' colorScheme='yellow' isChecked={isInStock} onChange={updateIsInStock}>

@@ -9,14 +9,14 @@ interface SignUpFormProps {
 }
 
 export interface Values {
-    name: string;
+    firstname: string;
     email: string;
     password: string;
 }
 
 const SignUpForm = ({signUpHandler}: SignUpFormProps) => {
     const ValidationSchema = Yup.object().shape({
-        name: Yup.string()
+        firstname: Yup.string()
             .required('Пожалуйста, введите вашe имя'),
         email: Yup.string()
             .email('Пожалуйста, введите корректный  email')
@@ -30,7 +30,7 @@ const SignUpForm = ({signUpHandler}: SignUpFormProps) => {
     return (
         <Formik
             initialValues={{
-                name: '',
+                firstname: '',
                 email: '',
                 password: ''
             }}
@@ -47,7 +47,7 @@ const SignUpForm = ({signUpHandler}: SignUpFormProps) => {
                 <Form>
                     <Stack spacing={4} textAlign='left'>
                         <FormControl>
-                            <Field name='name'>
+                            <Field name='firstname'>
                                 {({field, meta}: any) => (
                                     <>
                                         <Input type='text'

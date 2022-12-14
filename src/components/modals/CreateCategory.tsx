@@ -23,7 +23,7 @@ interface EditCategoryModalProps {
 }
 
 const CreateCategoryModal = ({
-                                 category,
+                                 category = {} as ICategory,
                                  handleSelectedCategory,
                                  isOpen,
                                  onClose,
@@ -36,12 +36,13 @@ const CreateCategoryModal = ({
                 <ModalHeader borderBottom='1px solid' borderBottomColor='gray.200'>Создание категории</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody my={4}>
-                    <VStack spacing={4}>
+                    <VStack spacing={3}>
                         <Input placeholder='Введите название категории' value={category.name}
                                onChange={(e) => handleSelectedCategory({...category, name: e.target.value})}/>
-                        <Input placeholder='Добавьте ссылку на изображение' value={category.image}
-                               onChange={(e) => handleSelectedCategory({...category, image: e.target.value})}/>
+                        <Input placeholder='Введите описание категории' value={category.description}
+                               onChange={(e) => handleSelectedCategory({...category, description: e.target.value})}/>
                     </VStack>
+
                 </ModalBody>
                 <ModalFooter>
                     <Button variant='ghost' mr={3} onClick={onClose}>

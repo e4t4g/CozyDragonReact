@@ -22,6 +22,7 @@ import SignUp from "./modals/SignUp";
 import {ICustomer} from "../models/ICustomer";
 import {Links} from './cart/Links';
 import {isAdmin} from '../constants/isAdmin';
+import { rootURL } from '../constants/URLs';
 
 export const Header = () => {
     const {onChangeCurrentCategory} = useCategory();
@@ -33,7 +34,7 @@ export const Header = () => {
 
     const signInBySocial = async (source: string) => {
         await axios.get(
-            `/user/login/${source}`
+            `${rootURL}/user/login/${source}`
         )
             .then(({data}) => {
                 console.log(data);
@@ -48,10 +49,10 @@ export const Header = () => {
             })
     }
 
-    const signInByEmail = async ({email, password}: ICustomer) => {
+    const signInByEmail = async ({firstname, email, password}: ICustomer) => {
         await axios.post(
-            `https://api.escuelajs.co/api/v1/auth/login`, {
-                email, password
+            `${rootURL}/user/login`, {
+                firstname, email, password
             }
         )
             .then(({data}) => {
@@ -65,11 +66,10 @@ export const Header = () => {
                 signInDisclosure.onClose();
             })
     }
-    const signUpHandler = async ({name, email, password}: ICustomer) => {
+    const signUpHandler = async ({firstname, email, password}: ICustomer) => {
         await axios.post(
-            `https://api.escuelajs.co/api/v1/users/`, {
-                name, email, password,
-                avatar: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Missing_avatar.svg'
+            `${rootURL}/user/create`, {
+                firstname, email, password
             }
         )
             .then(({data}) => {
@@ -102,10 +102,10 @@ export const Header = () => {
                 <Flex alignItems='center' color='gray.500' textTransform={"uppercase"} ml={4}>
                     <svg width="52" height="52"
                          xmlns="http://www.w3.org/2000/svg">
-                        <image href="/imgs/logo.svg" height="52" width="52"/>
+                        <image href="/imgs/logo.png" height="52" width="52"/>
                     </svg>
-                    <Text ml={2} as='h1' fontSize='4xl' fontWeight='thin' textTransform='lowercase'>
-                        store
+                    <Text ml={2} as='h1' fontSize='3xl' fontWeight='thin' textTransform='lowercase'>
+                        Cozy Dragon
                     </Text>
                 </Flex>
             </Link>
@@ -136,7 +136,7 @@ export const Header = () => {
                             minW={0}>
                             <Avatar
                                 size={'md'}
-                                src={customer?.avatar}
+                                src={customer?.avatar ?? '/imgs/avatar-placeholder.png'}
                                 border='1px solid'
                                 borderColor='gray.400'
                             />
